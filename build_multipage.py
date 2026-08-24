@@ -730,8 +730,10 @@ def inject_promos(src: str) -> str:
 
 # ─── build uk.html ────────────────────────────────────────────────────────────
 
+SOURCE = '/home/user/ukvisa/uk.html'
+
 def build_uk():
-    lines, manifest = load_bundle('/home/user/ukvisa/index.html')
+    lines, manifest = load_bundle(SOURCE)
 
     # ConsultForm with promo codes
     manifest['4ccf8b6e-9863-4ccf-8411-475d3a657df9']['data'] = pack(inject_promos(CONSULT_FORM_UK))
@@ -745,7 +747,7 @@ def build_uk():
 # ─── build schengen.html ─────────────────────────────────────────────────────
 
 def build_schengen():
-    lines, manifest = load_bundle('/home/user/ukvisa/index.html')
+    lines, manifest = load_bundle(SOURCE)
 
     # Hero - Schengen version
     manifest['d8b75256-d161-4203-a466-a96659caa0e7']['data'] = pack(SCHENGEN_HERO)
@@ -770,135 +772,137 @@ def build_schengen():
 
 # ─── build new index.html (landing page) ─────────────────────────────────────
 
-INDEX_HTML = """\
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Royal Visa - Визовый сервис</title>
-  <meta name="description" content="Визы в Великобританию и Шенгенскую зону. Оформление под ключ с 2022 года.">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    :root {
-      --bg: #09080f;
-      --surface: rgba(255,255,255,0.045);
-      --border: rgba(255,255,255,0.1);
-      --border-hover: rgba(182,166,214,0.5);
-      --text: #f2f0ff;
-      --muted: rgba(242,240,255,0.55);
-      --accent: #9b8ec4;
-      --grad: linear-gradient(135deg, #b6a6d6 0%, #7b68ae 50%, #4f3f8a 100%);
-      --glow: rgba(155,142,196,0.3);
-    }
-    @media (prefers-color-scheme: light) {
-      :root {
-        --bg: #f4f2ff;
-        --surface: rgba(0,0,0,0.04);
-        --border: rgba(0,0,0,0.1);
-        --text: #1a1528;
-        --muted: rgba(26,21,40,0.55);
-      }
-    }
-    body {
-      background: var(--bg); color: var(--text);
-      font-family: 'Inter', sans-serif; min-height: 100vh;
-      display: flex; flex-direction: column;
-      align-items: center; justify-content: center;
-      padding: 24px;
-    }
-    .logo { height: 44px; margin-bottom: 48px; }
-    .eyebrow {
-      font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
-      color: var(--accent); font-weight: 600; margin-bottom: 16px; text-align: center;
-    }
-    h1 {
-      font-size: clamp(28px, 5vw, 44px); font-weight: 700; text-align: center;
-      line-height: 1.1; letter-spacing: -0.02em; margin-bottom: 12px;
-    }
-    .sub {
-      font-size: 17px; color: var(--muted); text-align: center;
-      max-width: 480px; line-height: 1.6; margin-bottom: 52px;
-    }
-    .cards {
-      display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 16px; width: 100%; max-width: 680px;
-    }
-    .card {
-      display: flex; flex-direction: column;
-      padding: 32px 28px; border-radius: 20px;
-      background: var(--surface); border: 1px solid var(--border);
-      backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-      text-decoration: none; color: inherit;
-      transition: border-color .2s ease, transform .2s ease, box-shadow .2s ease;
-      cursor: pointer;
-    }
-    .card:hover {
-      border-color: var(--border-hover);
-      transform: translateY(-4px);
-      box-shadow: 0 16px 48px var(--glow);
-    }
-    .card-flag { font-size: 48px; margin-bottom: 18px; }
-    .card-title { font-size: 22px; font-weight: 700; margin-bottom: 8px; }
-    .card-desc { font-size: 14px; color: var(--muted); line-height: 1.55; flex: 1; }
-    .card-link {
-      display: inline-flex; align-items: center; gap: 6px;
-      margin-top: 24px; font-size: 14px; font-weight: 600; color: var(--accent);
-    }
-    .card-link svg { width: 16px; height: 16px; }
-    .footer-note {
-      margin-top: 52px; font-size: 12px; color: var(--muted);
-      text-align: center; max-width: 480px; line-height: 1.6;
-    }
-  </style>
-</head>
-<body>
-  <div class="eyebrow">Визовый сервис с 2022 года</div>
-  <h1>Какая виза вас&nbsp;интересует?</h1>
-  <p class="sub">Помогаем оформить визу под ключ - от анкеты до подачи документов.</p>
+LANDING_APP = r"""/* global React */
+function LandingPage() {
+  const { Badge } = window.RoyalVisaUKDesignSystem_ccc97c;
 
-  <div class="cards">
-    <a href="uk.html" class="card">
-      <div class="card-flag">🇬🇧</div>
-      <div class="card-title">Виза в&nbsp;Великобританию</div>
-      <p class="card-desc">
-        96% одобрений. Виза от 6 месяцев до 10 лет с многократным въездом.
-        Один из самых надёжных вариантов для путешествий.
-      </p>
-      <div class="card-link">
-        Узнать подробнее
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+  React.useEffect(() => {
+    if (window.lucide) window.lucide.createIcons();
+  });
+
+  const cards = [
+    {
+      flag: '🇬🇧',
+      title: 'Виза в Великобританию',
+      desc: '96% одобрений. Виза от 6 месяцев до 10 лет с многократным въездом. Один из самых надёжных вариантов для путешествий.',
+      stat: [['96%', 'Одобрений'], ['10 лет', 'Макс. срок']],
+      href: 'uk.html',
+      grad: 'var(--grad-royal)',
+      glow: 'var(--glow-violet)',
+    },
+    {
+      flag: '🇪🇺',
+      title: 'Шенгенская виза',
+      desc: '29 стран Европы по одной визе. Сложнее, чем раньше, но реально. Есть случаи выдачи на 2 года даже в 2026 году.',
+      stat: [['29 стран', 'Шенгенской зоны'], ['до 2 лет', 'Срок визы']],
+      href: 'schengen.html',
+      grad: 'var(--grad-twilight)',
+      glow: 'var(--glow-steel)',
+    },
+  ];
+
+  return (
+    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '40px 20px' }}>
+      {/* Ambient glow */}
+      <div style={{ position: 'fixed', inset: 0, zIndex: -1, overflow: 'hidden', pointerEvents: 'none' }}>
+        <div style={{ position: 'absolute', top: '10%', left: '20%', width: 600, height: 600, borderRadius: '50%', background: 'var(--grad-royal)', filter: 'blur(140px)', opacity: 0.12 }} />
+        <div style={{ position: 'absolute', bottom: '10%', right: '15%', width: 500, height: 500, borderRadius: '50%', background: 'var(--grad-twilight)', filter: 'blur(120px)', opacity: 0.1 }} />
       </div>
-    </a>
 
-    <a href="schengen.html" class="card">
-      <div class="card-flag">🇪🇺</div>
-      <div class="card-title">Шенгенская виза</div>
-      <p class="card-desc">
-        29 стран Европы по одной визе. Сложнее, чем раньше, но реально.
-        Есть случаи выдачи на 2 года даже в 2026 году.
-      </p>
-      <div class="card-link">
-        Узнать подробнее
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      <div style={{ marginBottom: 48, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 20 }}>
+        <img src={window.__rv('wordmark', 'assets/logo/royal-visa-wordmark.svg')} alt="Royal Visa" style={{ height: 44 }} />
+        <Badge tone="accent" dot>Визовый сервис с 2022 года</Badge>
       </div>
-    </a>
-  </div>
 
-  <p class="footer-note">
-    Royal Visa - частный визовый сервис. Мы не являемся государственным органом
-    и не аффилированы с UKVI или посольствами. Решение по визе принимает консульство.
-  </p>
-</body>
-</html>
+      <div style={{ textAlign: 'center', marginBottom: 52 }}>
+        <h1 style={{ fontSize: 'var(--t-display)', letterSpacing: 'var(--track-tight)', lineHeight: 1.05 }}>
+          Какая виза вас
+          <span style={{ background: 'var(--grad-royal)', WebkitBackgroundClip: 'text', backgroundClip: 'text', color: 'transparent' }}> интересует?</span>
+        </h1>
+        <p style={{ marginTop: 16, fontSize: 'var(--t-lg)', color: 'var(--text-body)', maxWidth: 480, margin: '16px auto 0', lineHeight: 'var(--lh-relaxed)' }}>
+          Помогаем оформить визу под ключ - от анкеты до подачи документов.
+        </p>
+      </div>
+
+      <div className="rv-landing-cards" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 20, width: '100%', maxWidth: 760 }}>
+        {cards.map((c) => (
+          <a key={c.href} href={c.href} style={{ textDecoration: 'none', color: 'inherit', display: 'block' }}>
+            <div
+              className="rv-landing-card"
+              style={{
+                height: '100%', padding: 32, borderRadius: 'var(--r-2xl)',
+                background: 'var(--glass-fill)', border: '1px solid var(--glass-edge)',
+                backdropFilter: 'var(--glass-blur)', WebkitBackdropFilter: 'var(--glass-blur)',
+                boxShadow: 'var(--glass-shadow), var(--glass-inner)',
+                display: 'flex', flexDirection: 'column',
+                transition: 'border-color .22s ease, transform .22s ease, box-shadow .22s ease',
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.borderColor = 'rgba(182,166,214,0.5)';
+                e.currentTarget.style.transform = 'translateY(-5px)';
+                e.currentTarget.style.boxShadow = c.glow + ', var(--glass-inner)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.borderColor = 'var(--glass-edge)';
+                e.currentTarget.style.transform = 'none';
+                e.currentTarget.style.boxShadow = 'var(--glass-shadow), var(--glass-inner)';
+              }}
+            >
+              <div style={{ fontSize: 56, marginBottom: 20, lineHeight: 1 }}>{c.flag}</div>
+              <h2 style={{ fontSize: 'var(--t-h3)', color: 'var(--text-strong)', marginBottom: 12 }}>{c.title}</h2>
+              <p style={{ fontSize: 'var(--t-body)', color: 'var(--text-body)', lineHeight: 1.6, flex: 1 }}>{c.desc}</p>
+
+              <div style={{ display: 'flex', gap: 20, marginTop: 24, paddingTop: 20, borderTop: '1px solid var(--glass-edge-faint)' }}>
+                {c.stat.map(([v, l]) => (
+                  <div key={l}>
+                    <div style={{ fontFamily: 'var(--font-mono)', fontSize: 20, fontWeight: 600, color: 'var(--text-strong)' }}>{v}</div>
+                    <div style={{ fontSize: 'var(--t-xs)', color: 'var(--text-muted)', marginTop: 2 }}>{l}</div>
+                  </div>
+                ))}
+              </div>
+
+              <div style={{ marginTop: 24, display: 'flex', alignItems: 'center', gap: 6, color: 'var(--accent-violet)', fontWeight: 600, fontSize: 'var(--t-sm)' }}>
+                Узнать подробнее
+                <i data-lucide="arrow-right" style={{ width: 16, height: 16 }}></i>
+              </div>
+            </div>
+          </a>
+        ))}
+      </div>
+
+      <p style={{ marginTop: 52, fontSize: 'var(--t-xs)', color: 'var(--text-muted)', textAlign: 'center', maxWidth: 520, lineHeight: 1.6 }}>
+        Royal Visa - частный визовый сервис. Мы не являемся государственным органом
+        и не аффилированы с UKVI или посольствами. Решение по визе принимает консульство.
+      </p>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<LandingPage />);
+setTimeout(() => window.lucide && window.lucide.createIcons(), 80);
 """
 
 def build_index():
-    with open('/home/user/ukvisa/index.html', 'w', encoding='utf-8') as f:
-        f.write(INDEX_HTML)
-    print('Written: /home/user/ukvisa/index.html')
+    """Build index.html as a proper bundle using the design system, with a landing page App."""
+    lines, manifest = load_bundle('/home/user/ukvisa/uk.html')
+
+    # Replace App component with landing page
+    manifest['774abb2e-b7d0-47e2-9652-6e2780b11610']['data'] = pack(LANDING_APP)
+
+    # Remove heavy photo assets that aren't used on the landing page
+    # (keep wordmark, fonts, React, Babel, design system - remove photos and map)
+    for uuid_to_remove in [
+        '923327bd-a28b-4eec-adfa-df4133dd71ae',  # bigben.jpg
+        '64080515-00ba-4554-bd9e-a1347b6b18a4',  # tower-bridge.jpg
+        'a609367f-1eee-422f-a3fa-3ee82fdf5b36',  # uk-map.png
+    ]:
+        if uuid_to_remove in manifest:
+            # Replace with tiny 1-byte placeholder to keep manifest structure but save space
+            # Actually just remove the data content – the components won't reference them
+            del manifest[uuid_to_remove]
+
+    write_bundle(lines, manifest, '/home/user/ukvisa/index.html',
+                 'Royal Visa - Визовый сервис')
 
 # ─── run ─────────────────────────────────────────────────────────────────────
 
