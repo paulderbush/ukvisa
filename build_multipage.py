@@ -479,11 +479,10 @@ function ConsultModal({ open, onClose }) {
           <i data-lucide="x" style={{ width: 18, height: 18, color: 'var(--text-strong)' }}></i>
         </button>
 
-        <div style={{ padding: '32px 8px 8px' }}>
-          <div style={{ textAlign: 'center', maxWidth: 620, margin: '0 auto 32px' }}>
+        <div style={{ padding: '20px 8px 8px' }}>
+          <div style={{ textAlign: 'center', maxWidth: 620, margin: '0 auto 20px' }}>
             <span className="rv-eyebrow">Бесплатная консультация</span>
-            <h2 style={{ fontSize: 'var(--t-h2)', marginTop: 14 }}>Оставьте заявку - ответим в мессенджере</h2>
-            <p style={{ marginTop: 12, fontSize: 'var(--t-lg)', color: 'var(--text-body)' }}>
+            <p style={{ marginTop: 10, fontSize: 'var(--t-lg)', color: 'var(--text-body)' }}>
               Расскажем, какая виза подходит именно вам, и как быстро её получить.
             </p>
           </div>
@@ -1064,7 +1063,7 @@ function Hero() {
               Получить шенген сложнее, чем раньше, но реально. Поможем оформить визу в Европу под ключ.
             </p>
             <div className="rv-hero-actions" style={{ marginTop: 32, display: 'flex', gap: 14, flexWrap: 'wrap' }}>
-              <Button variant="primary" size="lg" iconRight={<i data-lucide="arrow-right" style={{ width: 18, height: 18 }}></i>} onClick={() => { if (window.__openConsult) window.__openConsult(); }}>
+              <Button variant="primary" size="lg" iconRight={<i data-lucide="arrow-right" style={{ width: 18, height: 18 }}></i>} onClick={(e) => go(e, '#consult')}>
                 Бесплатная консультация
               </Button>
               <Button variant="secondary" size="lg" onClick={(e) => go(e, '#services')}>Стоимость</Button>
@@ -1590,7 +1589,7 @@ function TariffCard({ data, featured, onOpenFee }) {
         <div style={{ marginTop: 22 }}>
           <Button variant="secondary" fullWidth size="lg"
             iconRight={<i data-lucide="arrow-right" style={{ width: 18, height: 18 }}></i>}
-            onClick={() => { if (window.__openConsult) window.__openConsult(); }}>
+            onClick={() => { const el = document.getElementById('consult'); if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' }); }}>
             Записаться на консультацию
           </Button>
         </div>
@@ -1750,10 +1749,9 @@ function ConsultModal({ open, onClose }) {
         }}>
           <i data-lucide="x" style={{ width: 18, height: 18, color: 'var(--text-strong)' }}></i>
         </button>
-        <div style={{ textAlign: 'center', marginBottom: 28 }}>
+        <div style={{ textAlign: 'center', marginBottom: 20 }}>
           <span className="rv-eyebrow">Бесплатная консультация</span>
-          <h2 style={{ fontSize: 'var(--t-h2)', marginTop: 12 }}>Оставьте заявку</h2>
-          <p style={{ marginTop: 10, fontSize: 'var(--t-body)', color: 'var(--text-body)' }}>Ответим в мессенджере и расскажем о вашей визе.</p>
+          <p style={{ marginTop: 10, fontSize: 'var(--t-body)', color: 'var(--text-body)' }}>Расскажем, какая виза подходит именно вам, и как быстро её получить.</p>
         </div>
         {sent ? (
           <div style={{ textAlign: 'center', padding: '24px 0', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 14 }}>
@@ -2060,6 +2058,12 @@ def build_schengen():
         {'id': 'wordmark', 'uuid': UUID_WORDMARK},
         {'id': 'paris', 'uuid': UUID_PARIS},
         {'id': 'schengenmap', 'uuid': UUID_SCHENGENMAP},
+        # The design system bundle embeds the full UK app and renders it on
+        # load, referencing these three assets via window.__rv. Without blob
+        # URL mappings here the fallback file paths 404 and fire [bundle] errors.
+        {'id': 'bigben', 'uuid': UUID_BIGBEN},
+        {'id': 'towerbridge', 'uuid': UUID_TOWERBRIDGE},
+        {'id': 'ukmap', 'uuid': UUID_UKMAP},
     ]
 
     write_bundle(lines, manifest, '/home/user/ukvisa/schengen.html',
@@ -2091,18 +2095,18 @@ def build_index():
     if os.path.exists(favicon_path):
         load_new_asset(UUID_FAVICON, favicon_path, 'image/png', manifest)
 
-    # Remove heavy assets not used on landing page
-    for uuid_to_remove in [UUID_BIGBEN, UUID_TOWERBRIDGE, UUID_UKMAP]:
-        if uuid_to_remove in manifest:
-            del manifest[uuid_to_remove]
-
     ext_resources = [
         {'id': 'wordmark', 'uuid': UUID_WORDMARK},
         {'id': 'banner', 'uuid': UUID_BANNER},
+        # Design system bundle embeds UK app render — keep these mapped so
+        # its bigben/towerbridge/ukmap calls resolve to blob URLs, not 404s.
+        {'id': 'bigben', 'uuid': UUID_BIGBEN},
+        {'id': 'towerbridge', 'uuid': UUID_TOWERBRIDGE},
+        {'id': 'ukmap', 'uuid': UUID_UKMAP},
     ]
 
     write_bundle(lines, manifest, '/home/user/ukvisa/index.html',
-                 'Royal Visas - Визовый сервис',
+                 'Royal Visas - Визы в Европу и Великобританию',
                  ext_resources=ext_resources,
                  favicon_uuid=UUID_FAVICON)
 
