@@ -280,7 +280,11 @@ function Footer() {
             <img src={window.__rv('wordmark', 'assets/logo/royal-visa-wordmark.svg')} alt="Royal Visas" style={{ height: 40 }} />
             <nav style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
               {links.map(([h, l]) => (
-                <a key={h} href={h} onClick={h === '#consult' ? (e) => { e.preventDefault(); if (window.__openConsult) window.__openConsult(); } : undefined} style={{ padding: '8px 14px', borderRadius: 'var(--r-pill)', fontSize: 'var(--t-sm)', color: 'var(--text-body)', textDecoration: 'none' }}>{l}</a>
+                <a key={h} href={h}
+                  onClick={h === '#consult' ? (e) => { e.preventDefault(); if (window.__openConsult) window.__openConsult(); } : undefined}
+                  onMouseEnter={(e) => { e.currentTarget.style.background = 'var(--glass-fill)'; e.currentTarget.style.color = 'var(--text-strong)'; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--text-body)'; }}
+                  style={{ padding: '8px 14px', borderRadius: 'var(--r-pill)', fontSize: 'var(--t-sm)', color: 'var(--text-body)', textDecoration: 'none', transition: 'background .15s, color .15s' }}>{l}</a>
               ))}
             </nav>
             <div style={{ display: 'flex', gap: 10 }}>
@@ -292,9 +296,13 @@ function Footer() {
                   ['mail', 'E-mail', 'mailto:paul.derbush@icloud.com?subject=' + encodeURIComponent('Виза') + '&body=' + encodeURIComponent(MSG)],
                 ];
                 return contacts.map(([ic, t, href]) => (
-                  <a key={t} href={href} target="_blank" rel="noopener noreferrer" aria-label={t} style={{
+                  <a key={t} href={href} target="_blank" rel="noopener noreferrer" aria-label={t}
+                    onMouseEnter={(e) => { e.currentTarget.style.background = 'var(--glass-fill-strong)'; e.currentTarget.style.borderColor = 'rgba(182,166,214,0.5)'; e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = 'var(--glow-violet), var(--glass-inner)'; }}
+                    onMouseLeave={(e) => { e.currentTarget.style.background = 'var(--glass-fill)'; e.currentTarget.style.borderColor = 'var(--glass-edge)'; e.currentTarget.style.transform = 'none'; e.currentTarget.style.boxShadow = 'none'; }}
+                    style={{
                     width: 42, height: 42, borderRadius: 'var(--r-md)', display: 'flex', alignItems: 'center', justifyContent: 'center',
                     background: 'var(--glass-fill)', border: '1px solid var(--glass-edge)',
+                    transition: 'background .18s, border-color .18s, transform .18s, box-shadow .18s',
                   }}>
                     <i data-lucide={ic} style={{ width: 18, height: 18, color: 'var(--accent-violet)' }}></i>
                   </a>
@@ -1163,7 +1171,109 @@ Object.assign(window, { AboutVisa });
 """
 
 SCHENGEN_MAP = r"""/* global React */
-var SCHENGEN_COLOR_GROUPS = [
+var SCHENGEN_GEO_GROUPS = [
+  { label: 'Западная Европа', countries: [
+    { id: 'fr', name: 'Франция', flag: '🇫🇷', capital: 'Париж' },
+    { id: 'de', name: 'Германия', flag: '🇩🇪', capital: 'Берлин' },
+    { id: 'nl', name: 'Нидерланды', flag: '🇳🇱', capital: 'Амстердам' },
+    { id: 'be', name: 'Бельгия', flag: '🇧🇪', capital: 'Брюссель' },
+    { id: 'lu', name: 'Люксембург', flag: '🇱🇺', capital: 'Люксембург' },
+    { id: 'at', name: 'Австрия', flag: '🇦🇹', capital: 'Вена' },
+    { id: 'ch', name: 'Швейцария', flag: '🇨🇭', capital: 'Берн' },
+    { id: 'li', name: 'Лихтенштейн', flag: '🇱🇮', capital: 'Вадуц' },
+    { id: 'pt', name: 'Португалия', flag: '🇵🇹', capital: 'Лиссабон' },
+  ]},
+  { label: 'Южная Европа', countries: [
+    { id: 'it', name: 'Италия', flag: '🇮🇹', capital: 'Рим' },
+    { id: 'es', name: 'Испания', flag: '🇪🇸', capital: 'Мадрид' },
+    { id: 'gr', name: 'Греция', flag: '🇬🇷', capital: 'Афины' },
+    { id: 'hr', name: 'Хорватия', flag: '🇭🇷', capital: 'Загреб' },
+    { id: 'si', name: 'Словения', flag: '🇸🇮', capital: 'Любляна' },
+    { id: 'mt', name: 'Мальта', flag: '🇲🇹', capital: 'Валлетта' },
+  ]},
+  { label: 'Центральная и Восточная Европа', countries: [
+    { id: 'pl', name: 'Польша', flag: '🇵🇱', capital: 'Варшава' },
+    { id: 'cz', name: 'Чехия', flag: '🇨🇿', capital: 'Прага' },
+    { id: 'sk', name: 'Словакия', flag: '🇸🇰', capital: 'Братислава' },
+    { id: 'hu', name: 'Венгрия', flag: '🇭🇺', capital: 'Будапешт' },
+    { id: 'ro', name: 'Румыния', flag: '🇷🇴', capital: 'Бухарест' },
+    { id: 'bg', name: 'Болгария', flag: '🇧🇬', capital: 'София' },
+  ]},
+  { label: 'Северная Европа', countries: [
+    { id: 'se', name: 'Швеция', flag: '🇸🇪', capital: 'Стокгольм' },
+    { id: 'no', name: 'Норвегия', flag: '🇳🇴', capital: 'Осло' },
+    { id: 'dk', name: 'Дания', flag: '🇩🇰', capital: 'Копенгаген' },
+    { id: 'fi', name: 'Финляндия', flag: '🇫🇮', capital: 'Хельсинки' },
+    { id: 'is', name: 'Исландия', flag: '🇮🇸', capital: 'Рейкьявик' },
+  ]},
+  { label: 'Прибалтика', countries: [
+    { id: 'ee', name: 'Эстония', flag: '🇪🇪', capital: 'Таллин' },
+    { id: 'lv', name: 'Латвия', flag: '🇱🇻', capital: 'Рига' },
+    { id: 'lt', name: 'Литва', flag: '🇱🇹', capital: 'Вильнюс' },
+  ]},
+];
+
+function UKMap() {
+  var [hoveredId, setHoveredId] = React.useState(null);
+  return (
+    <section id="map" style={{ paddingBlock: 'var(--section-gap)' }}>
+      <div className="rv-container">
+        <div style={{ textAlign: 'center', maxWidth: 680, margin: '0 auto 44px' }}>
+          <span className="rv-eyebrow">{'Шенгенская зона'}</span>
+          <h2 style={{ fontSize: 'var(--t-h1)', marginTop: 14 }}>{'Одна виза - вся Европа'}</h2>
+          <p style={{ marginTop: 16, fontSize: 'var(--t-lg)', color: 'var(--text-body)' }}>
+            {'29 стран шенгенской зоны. Одна виза даёт доступ ко всем — без отдельных разрешений.'}
+          </p>
+        </div>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 32 }}>
+          {SCHENGEN_GEO_GROUPS.map(function(geo) {
+            return (
+              <div key={geo.label}>
+                <div style={{ fontSize: 'var(--t-sm)', fontWeight: 600, letterSpacing: 'var(--track-eyebrow)', textTransform: 'uppercase', color: 'var(--text-muted)', marginBottom: 14 }}>
+                  {geo.label}
+                </div>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+                  {geo.countries.map(function(c) {
+                    var on = hoveredId === c.id;
+                    return (
+                      <div
+                        key={c.id}
+                        onMouseEnter={function() { setHoveredId(c.id); }}
+                        onMouseLeave={function() { setHoveredId(null); }}
+                        style={{
+                          padding: '10px 16px', borderRadius: 'var(--r-lg)',
+                          display: 'flex', alignItems: 'center', gap: 10,
+                          background: on ? 'var(--glass-fill-strong)' : 'var(--glass-fill)',
+                          border: ('1px solid ' + (on ? 'rgba(182,166,214,0.5)' : 'var(--glass-edge)')),
+                          backdropFilter: 'var(--glass-blur)', WebkitBackdropFilter: 'var(--glass-blur)',
+                          boxShadow: on ? 'var(--glow-violet), var(--glass-inner)' : 'var(--glass-inner-soft)',
+                          transform: on ? 'translateY(-2px)' : 'none',
+                          cursor: 'default',
+                          transition: 'all .18s ease',
+                        }}
+                      >
+                        <span style={{ fontSize: 20, lineHeight: 1 }}>{c.flag}</span>
+                        <div>
+                          <div style={{ fontSize: 'var(--t-sm)', fontWeight: on ? 600 : 500, color: on ? 'var(--text-strong)' : 'var(--text-body)', lineHeight: 1.2 }}>{c.name}</div>
+                          <div style={{ fontSize: 'var(--t-xs)', color: 'var(--text-muted)', marginTop: 2 }}>{c.capital}</div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+Object.assign(window, { UKMap });
+"""
+
+_SCHENGEN_MAP_OLD = r"""UNUSED_var SCHENGEN_COLOR_GROUPS = [
   { key: 'purple',       ref: [182,154,202], accent: 'rgba(210,180,240,0.85)',
     countries: [{id:'fr',name:'Франция',flag:'🇫🇷'},{id:'es',name:'Испания',flag:'🇪🇸'},{id:'hr',name:'Хорватия',flag:'🇭🇷'}] },
   { key: 'yellow-lime',  ref: [217,224,34],  accent: 'rgba(230,240,80,0.85)',
@@ -1734,8 +1844,6 @@ setTimeout(() => window.lucide && window.lucide.createIcons(), 80);
 
 LANDING_PAGE_JS = r"""/* global React */
 function LandingPage() {
-  const { Badge } = window.RoyalVisaUKDesignSystem_ccc97c;
-
   React.useEffect(() => {
     if (window.lucide) window.lucide.createIcons();
   });
@@ -1762,31 +1870,31 @@ function LandingPage() {
   ];
 
   return (
-    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '40px 20px' }}>
+    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '100px 20px 40px' }}>
       <div style={{ position: 'fixed', inset: 0, zIndex: -1, overflow: 'hidden', pointerEvents: 'none' }}>
         <div style={{ position: 'absolute', top: '10%', left: '20%', width: 600, height: 600, borderRadius: '50%', background: 'var(--grad-royal)', filter: 'blur(140px)', opacity: 0.12 }} />
         <div style={{ position: 'absolute', bottom: '10%', right: '15%', width: 500, height: 500, borderRadius: '50%', background: 'var(--grad-twilight)', filter: 'blur(120px)', opacity: 0.1 }} />
       </div>
 
-      <div style={{ marginBottom: 36, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 20 }}>
-        <img src={window.__rv('wordmark', 'assets/logo/royal-visa-wordmark.svg')} alt="Royal Visas" style={{ height: 44 }} />
-        <Badge tone="accent" dot>Визовый сервис с 2022 года</Badge>
-      </div>
-
-      <div style={{ width: '100%', maxWidth: 760, marginBottom: 8 }}>
-        <div style={{ borderRadius: 'var(--r-2xl)', overflow: 'hidden', boxShadow: 'var(--elev-2), var(--glass-inner)', aspectRatio: '21/6' }}>
+      <div style={{ width: '100%', maxWidth: 760, marginBottom: 36 }}>
+        <div style={{
+          padding: 12, borderRadius: 'var(--r-2xl)',
+          background: 'var(--glass-fill)', border: '1px solid var(--glass-edge)',
+          backdropFilter: 'var(--glass-blur)', WebkitBackdropFilter: 'var(--glass-blur)',
+          boxShadow: 'var(--elev-2), var(--glass-inner)',
+        }}>
           <img
             src={bannerSrc}
             alt="Royal Visas"
-            style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+            style={{ width: '100%', height: 'auto', display: 'block', borderRadius: 24 }}
           />
         </div>
       </div>
 
-      <div style={{ textAlign: 'center', marginBottom: 36, marginTop: 32 }}>
+      <div style={{ textAlign: 'center', marginBottom: 36 }}>
         <h1 style={{ fontSize: 'var(--t-display)', letterSpacing: 'var(--track-tight)', lineHeight: 1.05 }}>
-          Какая виза вас
-          <span style={{ background: 'var(--grad-royal)', WebkitBackgroundClip: 'text', backgroundClip: 'text', color: 'transparent' }}> интересует?</span>
+          Какая виза вас<br />
+          <span style={{ background: 'var(--grad-royal)', WebkitBackgroundClip: 'text', backgroundClip: 'text', color: 'transparent' }}>интересует?</span>
         </h1>
         <p style={{ marginTop: 16, fontSize: 'var(--t-lg)', color: 'var(--text-body)', maxWidth: 480, margin: '16px auto 0', lineHeight: 'var(--lh-relaxed)' }}>
           Помогаем оформить визу под ключ - от анкеты до подачи документов.
