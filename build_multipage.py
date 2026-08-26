@@ -2060,6 +2060,12 @@ def build_schengen():
         {'id': 'wordmark', 'uuid': UUID_WORDMARK},
         {'id': 'paris', 'uuid': UUID_PARIS},
         {'id': 'schengenmap', 'uuid': UUID_SCHENGENMAP},
+        # The design system bundle embeds the full UK app and renders it on
+        # load, referencing these three assets via window.__rv. Without blob
+        # URL mappings here the fallback file paths 404 and fire [bundle] errors.
+        {'id': 'bigben', 'uuid': UUID_BIGBEN},
+        {'id': 'towerbridge', 'uuid': UUID_TOWERBRIDGE},
+        {'id': 'ukmap', 'uuid': UUID_UKMAP},
     ]
 
     write_bundle(lines, manifest, '/home/user/ukvisa/schengen.html',
@@ -2091,14 +2097,14 @@ def build_index():
     if os.path.exists(favicon_path):
         load_new_asset(UUID_FAVICON, favicon_path, 'image/png', manifest)
 
-    # Remove heavy assets not used on landing page
-    for uuid_to_remove in [UUID_BIGBEN, UUID_TOWERBRIDGE, UUID_UKMAP]:
-        if uuid_to_remove in manifest:
-            del manifest[uuid_to_remove]
-
     ext_resources = [
         {'id': 'wordmark', 'uuid': UUID_WORDMARK},
         {'id': 'banner', 'uuid': UUID_BANNER},
+        # Design system bundle embeds UK app render — keep these mapped so
+        # its bigben/towerbridge/ukmap calls resolve to blob URLs, not 404s.
+        {'id': 'bigben', 'uuid': UUID_BIGBEN},
+        {'id': 'towerbridge', 'uuid': UUID_TOWERBRIDGE},
+        {'id': 'ukmap', 'uuid': UUID_UKMAP},
     ]
 
     write_bundle(lines, manifest, '/home/user/ukvisa/index.html',
