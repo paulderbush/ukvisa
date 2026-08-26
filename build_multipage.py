@@ -1077,26 +1077,26 @@ function Hero() {
               background: 'var(--grad-royal)', filter: 'blur(60px)', opacity: 0.42, zIndex: 0,
             }} />
             <div style={{
-              position: 'relative', zIndex: 1, borderRadius: 'var(--r-2xl)', overflow: 'hidden',
+              position: 'relative', zIndex: 1, padding: 12, borderRadius: 'var(--r-2xl)',
+              background: 'var(--glass-fill)', border: '1px solid var(--glass-edge)',
               boxShadow: 'var(--elev-3), var(--glass-inner)',
-              aspectRatio: '4/3',
+              backdropFilter: 'var(--glass-blur)', WebkitBackdropFilter: 'var(--glass-blur)',
             }}>
               <img
                 src={window.__rv('paris', 'assets/photos/paris.jpg')}
                 alt="Эйфелева башня, Париж"
-                style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+                style={{ display: 'block', width: '100%', height: 'auto', borderRadius: 24 }}
               />
               <div style={{
-                position: 'absolute', left: 20, bottom: 20,
-                display: 'flex', alignItems: 'center', gap: 10,
-                padding: '10px 16px', borderRadius: 'var(--r-lg)',
-                background: 'rgba(12,10,20,0.58)',
-                backdropFilter: 'blur(16px) saturate(140%)', WebkitBackdropFilter: 'blur(16px) saturate(140%)',
-                border: '1px solid rgba(255,255,255,0.14)',
-                boxShadow: '0 4px 24px rgba(0,0,0,0.3)',
+                position: 'absolute', left: 26, bottom: 26,
+                display: 'inline-flex', alignItems: 'center', gap: 10,
+                padding: '12px 16px', borderRadius: 'var(--r-pill)',
+                background: 'var(--glass-fill-solid)', border: '1px solid var(--glass-edge)',
+                backdropFilter: 'var(--glass-blur)', WebkitBackdropFilter: 'var(--glass-blur)',
+                boxShadow: 'var(--glass-inner)',
               }}>
-                <i data-lucide="map-pin" style={{ width: 16, height: 16, color: '#b6a6d6', flex: 'none' }}></i>
-                <span style={{ fontSize: 'var(--t-sm)', fontWeight: 600, color: '#fff', whiteSpace: 'nowrap' }}>Эйфелева башня, Париж</span>
+                <i data-lucide="map-pin" style={{ width: 16, height: 16, color: 'var(--accent-violet)' }}></i>
+                <span style={{ fontSize: 'var(--t-sm)', color: 'var(--text-strong)', fontWeight: 500 }}>Эйфелева башня, Париж</span>
               </div>
             </div>
           </div>
@@ -1163,203 +1163,191 @@ Object.assign(window, { AboutVisa });
 """
 
 SCHENGEN_MAP = r"""/* global React */
-const SCHENGEN_COLOR_GROUPS = [
-  {
-    key: 'purple',
-    ref: [182, 154, 202],
-    countries: [
-      { id: 'fr', name: 'Франция', flag: '🇫🇷' },
-      { id: 'es', name: 'Испания', flag: '🇪🇸' },
-      { id: 'hr', name: 'Хорватия', flag: '🇭🇷' },
-    ],
-  },
-  {
-    key: 'yellow-lime',
-    ref: [217, 224, 34],
-    countries: [
-      { id: 'de', name: 'Германия', flag: '🇩🇪' },
-      { id: 'pt', name: 'Португалия', flag: '🇵🇹' },
-      { id: 'it', name: 'Италия', flag: '🇮🇹' },
-      { id: 'at', name: 'Австрия', flag: '🇦🇹' },
-      { id: 'ch', name: 'Швейцария', flag: '🇨🇭' },
-      { id: 'cz', name: 'Чехия', flag: '🇨🇿' },
-      { id: 'si', name: 'Словения', flag: '🇸🇮' },
-      { id: 'li', name: 'Лихтенштейн', flag: '🇱🇮' },
-    ],
-  },
-  {
-    key: 'green',
-    ref: [140, 198, 63],
-    countries: [
-      { id: 'fi', name: 'Финляндия', flag: '🇫🇮' },
-      { id: 'ee', name: 'Эстония', flag: '🇪🇪' },
-    ],
-  },
-  {
-    key: 'sky',
-    ref: [133, 187, 223],
-    countries: [
-      { id: 'se', name: 'Швеция', flag: '🇸🇪' },
-      { id: 'hu', name: 'Венгрия', flag: '🇭🇺' },
-      { id: 'lu', name: 'Люксембург', flag: '🇱🇺' },
-      { id: 'ro', name: 'Румыния', flag: '🇷🇴' },
-      { id: 'mt', name: 'Мальта', flag: '🇲🇹' },
-      { id: 'be', name: 'Бельгия', flag: '🇧🇪' },
-      { id: 'nl', name: 'Нидерланды', flag: '🇳🇱' },
-    ],
-  },
-  {
-    key: 'blue-violet',
-    ref: [154, 153, 255],
-    countries: [
-      { id: 'pl', name: 'Польша', flag: '🇵🇱' },
-      { id: 'sk', name: 'Словакия', flag: '🇸🇰' },
-      { id: 'lt', name: 'Литва', flag: '🇱🇹' },
-      { id: 'lv', name: 'Латвия', flag: '🇱🇻' },
-    ],
-  },
-  {
-    key: 'bright-yellow',
-    ref: [255, 255, 104],
-    countries: [
-      { id: 'dk', name: 'Дания', flag: '🇩🇰' },
-      { id: 'no', name: 'Норвегия', flag: '🇳🇴' },
-      { id: 'gr', name: 'Греция', flag: '🇬🇷' },
-      { id: 'bg', name: 'Болгария', flag: '🇧🇬' },
-      { id: 'is', name: 'Исландия', flag: '🇮🇸' },
-    ],
-  },
+var SCHENGEN_COLOR_GROUPS = [
+  { key: 'purple',       ref: [182,154,202], accent: 'rgba(210,180,240,0.85)',
+    countries: [{id:'fr',name:'Франция',flag:'🇫🇷'},{id:'es',name:'Испания',flag:'🇪🇸'},{id:'hr',name:'Хорватия',flag:'🇭🇷'}] },
+  { key: 'yellow-lime',  ref: [217,224,34],  accent: 'rgba(230,240,80,0.85)',
+    countries: [{id:'de',name:'Германия',flag:'🇩🇪'},{id:'pt',name:'Португалия',flag:'🇵🇹'},{id:'it',name:'Италия',flag:'🇮🇹'},{id:'at',name:'Австрия',flag:'🇦🇹'},{id:'ch',name:'Швейцария',flag:'🇨🇭'},{id:'cz',name:'Чехия',flag:'🇨🇿'},{id:'si',name:'Словения',flag:'🇸🇮'},{id:'li',name:'Лихтенштейн',flag:'🇱🇮'}] },
+  { key: 'green',        ref: [140,198,63],  accent: 'rgba(160,220,80,0.85)',
+    countries: [{id:'fi',name:'Финляндия',flag:'🇫🇮'},{id:'ee',name:'Эстония',flag:'🇪🇪'}] },
+  { key: 'sky',          ref: [133,187,223], accent: 'rgba(160,210,240,0.85)',
+    countries: [{id:'se',name:'Швеция',flag:'🇸🇪'},{id:'hu',name:'Венгрия',flag:'🇭🇺'},{id:'lu',name:'Люксембург',flag:'🇱🇺'},{id:'ro',name:'Румыния',flag:'🇷🇴'},{id:'mt',name:'Мальта',flag:'🇲🇹'},{id:'be',name:'Бельгия',flag:'🇧🇪'},{id:'nl',name:'Нидерланды',flag:'🇳🇱'}] },
+  { key: 'blue-violet',  ref: [154,153,255], accent: 'rgba(180,178,255,0.85)',
+    countries: [{id:'pl',name:'Польша',flag:'🇵🇱'},{id:'sk',name:'Словакия',flag:'🇸🇰'},{id:'lt',name:'Литва',flag:'🇱🇹'},{id:'lv',name:'Латвия',flag:'🇱🇻'}] },
+  { key: 'bright-yellow',ref: [255,255,104], accent: 'rgba(255,255,140,0.85)',
+    countries: [{id:'dk',name:'Дания',flag:'🇩🇰'},{id:'no',name:'Норвегия',flag:'🇳🇴'},{id:'gr',name:'Греция',flag:'🇬🇷'},{id:'bg',name:'Болгария',flag:'🇧🇬'},{id:'is',name:'Исландия',flag:'🇮🇸'}] },
 ];
 
-const ALL_SCHENGEN = SCHENGEN_COLOR_GROUPS.flatMap((g) => g.countries);
+var GEO_GROUPS = [
+  { label: 'Западная Европа', ids: ['fr','de','nl','be','lu','at','ch','li','pt'] },
+  { label: 'Южная Европа', ids: ['it','es','hr','si','gr','mt','bg'] },
+  { label: 'Центральная/Восточная Европа', ids: ['pl','cz','sk','hu','ro'] },
+  { label: 'Северная Европа', ids: ['se','no','dk','fi','is'] },
+  { label: 'Прибалтика', ids: ['ee','lv','lt'] },
+];
 
-function colorDist(r, g, b, ref) {
-  const dr = r - ref[0], dg = g - ref[1], db = b - ref[2];
-  return dr * dr + dg * dg + db * db;
-}
+var ALL_BY_ID = {};
+SCHENGEN_COLOR_GROUPS.forEach(function(g) { g.countries.forEach(function(c) { ALL_BY_ID[c.id] = { country: c, group: g }; }); });
 
-function getGroupForPixel(r, g, b, a) {
-  if (a < 200) return null;
-  let best = null, bestDist = 3600;
-  for (const grp of SCHENGEN_COLOR_GROUPS) {
-    const d = colorDist(r, g, b, grp.ref);
-    if (d < bestDist) { bestDist = d; best = grp; }
+function schColorDist(r,g,b,ref) { var dr=r-ref[0],dg=g-ref[1],db=b-ref[2]; return dr*dr+dg*dg+db*db; }
+
+function getSchGroupKey(r,g,b,a) {
+  if (a < 128) return null;
+  var best=null, bestD=9000;
+  for (var i=0;i<SCHENGEN_COLOR_GROUPS.length;i++) {
+    var d=schColorDist(r,g,b,SCHENGEN_COLOR_GROUPS[i].ref);
+    if (d<bestD) { bestD=d; best=SCHENGEN_COLOR_GROUPS[i].key; }
   }
-  return best;
+  return bestD < 4000 ? best : null;
 }
 
 function UKMap() {
-  const canvasRef = React.useRef(null);
-  const overlayRef = React.useRef(null);
-  const imgDataRef = React.useRef(null);
-  const [activeGroup, setActiveGroup] = React.useState(null);
-  const mapUrl = window.__rv('schengenmap', 'assets/maps/map.jpg');
+  var imgRef = React.useRef(null);
+  var overlayCanvasRef = React.useRef(null);
+  var hiddenCanvasRef = React.useRef(null);
+  var masksRef = React.useRef(null);
+  var imgDataRef = React.useRef(null);
+  var activeGroupRef = React.useRef(null);
+  var [activeGroup, setActiveGroup] = React.useState(null);
+  var mapUrl = window.__rv('schengenmap', 'assets/maps/map.jpg');
 
-  React.useEffect(() => {
-    const img = new Image();
-    img.crossOrigin = 'anonymous';
-    img.onload = () => {
-      const canvas = canvasRef.current;
-      if (!canvas) return;
-      canvas.width = img.naturalWidth;
-      canvas.height = img.naturalHeight;
-      const ctx = canvas.getContext('2d');
+  React.useEffect(function() {
+    var img = new Image();
+    img.onload = function() {
+      var hc = hiddenCanvasRef.current;
+      if (!hc) return;
+      hc.width = img.naturalWidth; hc.height = img.naturalHeight;
+      var ctx = hc.getContext('2d');
       ctx.drawImage(img, 0, 0);
-      imgDataRef.current = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      var imgData = ctx.getImageData(0, 0, hc.width, hc.height);
+      imgDataRef.current = imgData;
+      var data = imgData.data, w = imgData.width, h = imgData.height;
+      var masks = {};
+      SCHENGEN_COLOR_GROUPS.forEach(function(g) { masks[g.key] = new Uint8ClampedArray(data.length); });
+      for (var i=0;i<data.length;i+=4) {
+        var key = getSchGroupKey(data[i],data[i+1],data[i+2],data[i+3]);
+        if (key) { masks[key][i]=data[i]; masks[key][i+1]=data[i+1]; masks[key][i+2]=data[i+2]; masks[key][i+3]=255; }
+      }
+      var stored = {};
+      SCHENGEN_COLOR_GROUPS.forEach(function(g) { stored[g.key] = new ImageData(masks[g.key], w, h); });
+      masksRef.current = stored;
     };
     img.src = mapUrl;
   }, [mapUrl]);
 
-  const handleMouseMove = React.useCallback((e) => {
-    const overlay = overlayRef.current;
-    if (!overlay || !imgDataRef.current) return;
-    const rect = overlay.getBoundingClientRect();
-    const scaleX = imgDataRef.current.width / rect.width;
-    const scaleY = imgDataRef.current.height / rect.height;
-    const px = Math.floor((e.clientX - rect.left) * scaleX);
-    const py = Math.floor((e.clientY - rect.top) * scaleY);
-    const { data, width, height } = imgDataRef.current;
-    if (px < 0 || py < 0 || px >= width || py >= height) return;
-    const i = (py * width + px) * 4;
-    const grp = getGroupForPixel(data[i], data[i+1], data[i+2], data[i+3]);
-    setActiveGroup(grp ? grp.key : null);
+  var drawOverlay = React.useCallback(function(key) {
+    var oc = overlayCanvasRef.current;
+    if (!oc || !imgDataRef.current) return;
+    oc.width = imgDataRef.current.width; oc.height = imgDataRef.current.height;
+    var ctx = oc.getContext('2d');
+    ctx.clearRect(0, 0, oc.width, oc.height);
+    if (key && masksRef.current && masksRef.current[key]) ctx.putImageData(masksRef.current[key], 0, 0);
   }, []);
 
-  const handleMouseLeave = React.useCallback(() => setActiveGroup(null), []);
+  var handleMouseMove = React.useCallback(function(e) {
+    if (!imgDataRef.current) return;
+    var rect = e.currentTarget.getBoundingClientRect();
+    var sx = imgDataRef.current.width / rect.width, sy = imgDataRef.current.height / rect.height;
+    var px = Math.floor((e.clientX-rect.left)*sx), py = Math.floor((e.clientY-rect.top)*sy);
+    var data = imgDataRef.current.data, w = imgDataRef.current.width, h = imgDataRef.current.height;
+    if (px<0||py<0||px>=w||py>=h) return;
+    var i=(py*w+px)*4;
+    var key = getSchGroupKey(data[i],data[i+1],data[i+2],data[i+3]);
+    if (key !== activeGroupRef.current) { activeGroupRef.current = key; setActiveGroup(key); drawOverlay(key); }
+  }, [drawOverlay]);
 
-  const activeGroupObj = activeGroup ? SCHENGEN_COLOR_GROUPS.find((g) => g.key === activeGroup) : null;
+  var handleMouseLeave = React.useCallback(function() {
+    activeGroupRef.current = null; setActiveGroup(null); drawOverlay(null);
+  }, [drawOverlay]);
+
+  var activeGroupObj = activeGroup ? SCHENGEN_COLOR_GROUPS.find(function(g) { return g.key === activeGroup; }) : null;
 
   return (
     <section id="map" style={{ paddingBlock: 'var(--section-gap)' }}>
       <div className="rv-container">
         <div style={{ textAlign: 'center', maxWidth: 680, margin: '0 auto 44px' }}>
-          <span className="rv-eyebrow">Шенгенская зона</span>
-          <h2 style={{ fontSize: 'var(--t-h1)', marginTop: 14 }}>Одна виза - вся Европа</h2>
+          <span className="rv-eyebrow">{'Шенгенская зона'}</span>
+          <h2 style={{ fontSize: 'var(--t-h1)', marginTop: 14 }}>{'Одна виза - вся Европа'}</h2>
           <p style={{ marginTop: 16, fontSize: 'var(--t-lg)', color: 'var(--text-body)' }}>
-            29 стран шенгенской зоны. Одна виза даёт доступ ко всем - без отдельных разрешений.
+            {'29 стран шенгенской зоны. Одна виза даёт доступ ко всем — без отдельных разрешений.'}
           </p>
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 32, alignItems: 'start' }} className="rv-map-grid">
-          <div style={{ position: 'relative', borderRadius: 'var(--r-xl)', overflow: 'hidden', boxShadow: 'var(--elev-2), var(--glass-inner)' }}>
-            <canvas ref={canvasRef} style={{ display: 'none' }} />
+        <div className="rv-map-grid" style={{ display: 'grid', gridTemplateColumns: '1.1fr 0.9fr', gap: 32, alignItems: 'start' }}>
+          <div style={{ position: 'relative', borderRadius: 'var(--r-xl)', overflow: 'hidden', background: '#08060f', boxShadow: 'var(--elev-2), var(--glass-inner)' }}>
+            <canvas ref={hiddenCanvasRef} style={{ display: 'none' }} />
             <img
+              ref={imgRef}
               src={mapUrl}
-              alt="Карта шенгенской зоны"
-              style={{ width: '100%', display: 'block', borderRadius: 'var(--r-xl)' }}
+              alt=""
+              style={{ width: '100%', display: 'block', filter: activeGroup ? 'brightness(0.42) saturate(0.7)' : 'none', transition: 'filter .25s ease' }}
             />
-            <div
-              ref={overlayRef}
-              onMouseMove={handleMouseMove}
-              onMouseLeave={handleMouseLeave}
-              style={{ position: 'absolute', inset: 0, cursor: 'crosshair' }}
+            <canvas
+              ref={overlayCanvasRef}
+              style={{
+                position: 'absolute', inset: 0, width: '100%', height: '100%', pointerEvents: 'none',
+                filter: activeGroupObj ? ('drop-shadow(0 0 14px ' + activeGroupObj.accent + ')') : 'none',
+                transition: 'filter .25s ease',
+              }}
             />
+            <div onMouseMove={handleMouseMove} onMouseLeave={handleMouseLeave} style={{ position: 'absolute', inset: 0, cursor: 'crosshair' }} />
             {activeGroupObj && (
               <div style={{
-                position: 'absolute', bottom: 16, left: 16, right: 16,
-                padding: '10px 16px', borderRadius: 'var(--r-lg)',
-                background: 'rgba(12,10,20,0.72)',
+                position: 'absolute', bottom: 14, left: 14, right: 14,
+                padding: '10px 14px', borderRadius: 'var(--r-lg)',
+                background: 'rgba(10,8,18,0.78)',
                 backdropFilter: 'blur(16px) saturate(140%)', WebkitBackdropFilter: 'blur(16px) saturate(140%)',
                 border: '1px solid rgba(255,255,255,0.12)',
-                display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap',
+                display: 'flex', flexWrap: 'wrap', gap: 8, alignItems: 'center',
               }}>
-                <span style={{ fontSize: 'var(--t-sm)', color: 'rgba(255,255,255,0.6)', flex: 'none' }}>Страны:</span>
-                {activeGroupObj.countries.map((c) => (
-                  <span key={c.id} style={{ fontSize: 'var(--t-sm)', color: '#fff', display: 'flex', alignItems: 'center', gap: 4 }}>
-                    <span>{c.flag}</span><span>{c.name}</span>
-                  </span>
-                ))}
+                {activeGroupObj.countries.map(function(c) {
+                  return (
+                    <span key={c.id} style={{ display: 'flex', alignItems: 'center', gap: 5, fontSize: 'var(--t-sm)', color: '#fff' }}>
+                      <span>{c.flag}</span><span>{c.name}</span>
+                    </span>
+                  );
+                })}
               </div>
             )}
           </div>
 
-          <div>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
-              {ALL_SCHENGEN.map((c) => {
-                const grp = SCHENGEN_COLOR_GROUPS.find((g) => g.countries.some((x) => x.id === c.id));
-                const on = activeGroup === grp?.key;
-                return (
-                  <div
-                    key={c.id}
-                    onMouseEnter={() => setActiveGroup(grp?.key || null)}
-                    onMouseLeave={() => setActiveGroup(null)}
-                    style={{
-                      padding: '8px 14px', borderRadius: 'var(--r-lg)',
-                      display: 'flex', alignItems: 'center', gap: 8,
-                      background: on ? 'var(--glass-fill-strong)' : 'var(--glass-fill)',
-                      border: `1px solid ${on ? 'rgba(182,166,214,0.5)' : 'var(--glass-edge)'}`,
-                      backdropFilter: 'var(--glass-blur)', WebkitBackdropFilter: 'var(--glass-blur)',
-                      boxShadow: on ? 'var(--glow-violet), var(--glass-inner)' : 'var(--glass-inner-soft)',
-                      transform: on ? 'translateY(-2px)' : 'none',
-                      cursor: 'default', transition: 'all .18s ease',
-                    }}
-                  >
-                    <span style={{ fontSize: 18, lineHeight: 1 }}>{c.flag}</span>
-                    <span style={{ fontSize: 'var(--t-sm)', fontWeight: on ? 600 : 400, color: on ? 'var(--text-strong)' : 'var(--text-body)', whiteSpace: 'nowrap' }}>{c.name}</span>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 22 }}>
+            {GEO_GROUPS.map(function(geo) {
+              return (
+                <div key={geo.label}>
+                  <div style={{ fontSize: 'var(--t-xs)', fontWeight: 600, letterSpacing: 'var(--track-eyebrow)', textTransform: 'uppercase', color: 'var(--text-muted)', marginBottom: 10 }}>
+                    {geo.label}
                   </div>
-                );
-              })}
-            </div>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+                    {geo.ids.map(function(id) {
+                      var entry = ALL_BY_ID[id];
+                      if (!entry) return null;
+                      var on = activeGroup === entry.group.key;
+                      return (
+                        <div
+                          key={id}
+                          onMouseEnter={function() { setActiveGroup(entry.group.key); activeGroupRef.current = entry.group.key; drawOverlay(entry.group.key); }}
+                          onMouseLeave={function() { setActiveGroup(null); activeGroupRef.current = null; drawOverlay(null); }}
+                          style={{
+                            padding: '6px 12px', borderRadius: 'var(--r-lg)',
+                            display: 'flex', alignItems: 'center', gap: 6,
+                            background: on ? 'var(--glass-fill-strong)' : 'var(--glass-fill)',
+                            border: ('1px solid ' + (on ? 'rgba(182,166,214,0.5)' : 'var(--glass-edge)')),
+                            backdropFilter: 'var(--glass-blur)', WebkitBackdropFilter: 'var(--glass-blur)',
+                            boxShadow: on ? 'var(--glow-violet), var(--glass-inner)' : 'var(--glass-inner-soft)',
+                            transform: on ? 'translateY(-1px)' : 'none',
+                            cursor: 'default', transition: 'all .18s ease',
+                          }}
+                        >
+                          <span style={{ fontSize: 15 }}>{entry.country.flag}</span>
+                          <span style={{ fontSize: 'var(--t-sm)', fontWeight: on ? 600 : 400, color: on ? 'var(--text-strong)' : 'var(--text-body)', whiteSpace: 'nowrap' }}>{entry.country.name}</span>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </div>
       </div>
@@ -1545,6 +1533,206 @@ def inject_promos(src: str) -> str:
     return src.replace('__PROMO_CODES__', json.dumps(PROMO_CODES))
 
 LANDING_APP = r"""/* global React */
+function ConsultModal({ open, onClose }) {
+  const TG_TOKEN = '8677081622:AAHAvOYbY50uCZnx9QimTXDO98CYJnMnvxA';
+  const TG_CHAT_ID = '-5235367527';
+  const VISA_LABEL = '📋 Новая заявка - Royal Visas';
+  const PROMO_DISCOUNT = 5000;
+
+  const { Button, Input, Switch } = window.RoyalVisaUKDesignSystem_ccc97c;
+  const [channel, setChannel] = React.useState('whatsapp');
+  const [sent, setSent] = React.useState(false);
+  const [name, setName] = React.useState('');
+  const [contact, setContact] = React.useState('');
+  const [sending, setSending] = React.useState(false);
+  const [error, setError] = React.useState('');
+  const [opts, setOpts] = React.useState({ weekdays: false, hours: false, anytime: true, urgent: false });
+
+  React.useEffect(() => {
+    if (!open) return;
+    const onKey = (e) => { if (e.key === 'Escape') onClose(); };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [open, onClose]);
+
+  React.useEffect(() => {
+    if (open) document.body.style.overflow = 'hidden';
+    else document.body.style.overflow = '';
+    return () => { document.body.style.overflow = ''; };
+  }, [open]);
+
+  React.useEffect(() => {
+    if (open && window.lucide) setTimeout(() => window.lucide.createIcons(), 30);
+  }, [open]);
+
+  const setOpt = (k, v) => setOpts((p) => {
+    const next = { ...p, [k]: v };
+    if (k === 'anytime' && v) { next.weekdays = false; next.hours = false; }
+    if ((k === 'weekdays' || k === 'hours') && v) next.anytime = false;
+    return next;
+  });
+
+  const submit = async (e) => {
+    e.preventDefault();
+    setError(''); setSending(true);
+    try {
+      const when = [];
+      if (opts.weekdays) when.push('только будни');
+      if (opts.hours) when.push('рабочие часы (до 18:00)');
+      if (opts.anytime) when.push('в любое время');
+      const text = [
+        VISA_LABEL,
+        'Имя: ' + (name || '-'),
+        'Канал: ' + (channel === 'whatsapp' ? 'WhatsApp' : 'Telegram'),
+        'Контакт: ' + (contact || '-'),
+        'Когда писать: ' + (when.join(', ') || '-'),
+        opts.urgent ? '⚡ Виза нужна СРОЧНО' : null,
+      ].filter(Boolean).join('\n');
+      const resp = await fetch('https://api.telegram.org/bot' + TG_TOKEN + '/sendMessage', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ chat_id: TG_CHAT_ID, text }),
+      });
+      const jr = await resp.json();
+      if (!jr.ok) throw new Error(jr.description || 'send failed');
+      setSent(true);
+    } catch (err) {
+      setError('Не удалось отправить заявку. Напишите нам напрямую в WhatsApp или Telegram.');
+    } finally {
+      setSending(false);
+    }
+  };
+
+  const switches = [
+    { key: 'weekdays', label: 'Писать только в будние дни', icon: 'calendar-days' },
+    { key: 'hours', label: 'Писать только в рабочие часы (до 18:00)', icon: 'clock' },
+    { key: 'anytime', label: 'Писать в любое время', icon: 'infinity' },
+    { key: 'urgent', label: 'Виза нужна срочно', icon: 'zap' },
+  ];
+
+  return (
+    <div style={{
+      position: 'fixed', inset: 0, zIndex: 200,
+      display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 20,
+      pointerEvents: open ? 'auto' : 'none',
+    }}>
+      <div onClick={onClose} style={{
+        position: 'absolute', inset: 0, background: 'rgba(8,7,13,0.65)',
+        backdropFilter: open ? 'blur(24px) saturate(140%)' : 'blur(0)',
+        WebkitBackdropFilter: open ? 'blur(24px) saturate(140%)' : 'blur(0)',
+        opacity: open ? 1 : 0, transition: 'opacity .28s ease',
+      }} />
+      <div role="dialog" aria-modal="true" style={{
+        position: 'relative', width: '100%', maxWidth: 560, maxHeight: '90vh', overflowY: 'auto',
+        borderRadius: 'var(--r-2xl)',
+        background: 'var(--glass-fill-strong)', border: '1px solid var(--glass-edge-strong)',
+        backdropFilter: 'var(--glass-blur-heavy)', WebkitBackdropFilter: 'var(--glass-blur-heavy)',
+        boxShadow: 'var(--elev-4), var(--glass-inner)',
+        transform: open ? 'translateY(0) scale(1)' : 'translateY(14px) scale(0.97)',
+        opacity: open ? 1 : 0,
+        transition: 'transform .32s cubic-bezier(.2,.8,.2,1), opacity .26s ease',
+        padding: 32,
+      }}>
+        <button aria-label="Закрыть" onClick={onClose} style={{
+          position: 'absolute', top: 16, right: 16, zIndex: 10,
+          width: 36, height: 36, cursor: 'pointer',
+          borderRadius: 'var(--r-sm)', background: 'var(--glass-fill)', border: '1px solid var(--glass-edge)',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+        }}>
+          <i data-lucide="x" style={{ width: 18, height: 18, color: 'var(--text-strong)' }}></i>
+        </button>
+        <div style={{ textAlign: 'center', marginBottom: 28 }}>
+          <span className="rv-eyebrow">Бесплатная консультация</span>
+          <h2 style={{ fontSize: 'var(--t-h2)', marginTop: 12 }}>Оставьте заявку</h2>
+          <p style={{ marginTop: 10, fontSize: 'var(--t-body)', color: 'var(--text-body)' }}>Ответим в мессенджере и расскажем о вашей визе.</p>
+        </div>
+        {sent ? (
+          <div style={{ textAlign: 'center', padding: '24px 0', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 14 }}>
+            <div style={{ width: 64, height: 64, borderRadius: '50%', background: 'var(--success-soft)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <i data-lucide="check" style={{ width: 30, height: 30, color: 'var(--success)' }}></i>
+            </div>
+            <h3 style={{ fontSize: 'var(--t-h3)' }}>Заявка отправлена</h3>
+            <p style={{ color: 'var(--text-muted)' }}>Свяжемся с вами в ближайшее время.</p>
+            <Button variant="ghost" size="sm" onClick={() => { setSent(false); setName(''); setContact(''); }}>Отправить ещё одну</Button>
+          </div>
+        ) : (
+          <form onSubmit={submit} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+            <Input label="Имя" placeholder="Как к вам обращаться" required value={name} onChange={(e) => setName(e.target.value)} icon={<i data-lucide="user-round" style={{ width: 17, height: 17 }}></i>} />
+            <div>
+              <div style={{ fontSize: 'var(--t-sm)', fontWeight: 500, color: 'var(--text-body)', marginBottom: 8 }}>Куда вам написать</div>
+              <div style={{ display: 'flex', gap: 10 }}>
+                {['whatsapp', 'telegram'].map((ch) => (
+                  <button key={ch} type="button" onClick={() => { setChannel(ch); setContact(''); setError(''); }} style={{
+                    flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 9,
+                    height: 48, cursor: 'pointer', borderRadius: 'var(--r-md)',
+                    fontFamily: 'var(--font-sans)', fontSize: 'var(--t-body)', fontWeight: 600,
+                    color: channel === ch ? '#fff' : 'var(--text-body)',
+                    background: channel === ch ? 'var(--grad-twilight)' : 'var(--glass-fill)',
+                    border: ('1px solid ' + (channel === ch ? 'rgba(255,255,255,0.2)' : 'var(--glass-edge)')),
+                    transition: 'all .2s ease',
+                  }}>
+                    <i data-lucide={ch === 'whatsapp' ? 'message-circle' : 'send'} style={{ width: 19, height: 19 }}></i>
+                    {ch === 'whatsapp' ? 'WhatsApp' : 'Telegram'}
+                  </button>
+                ))}
+              </div>
+            </div>
+            {channel === 'whatsapp'
+              ? <Input key="wa" label="Номер телефона" type="tel" required value={contact} onChange={(e) => setContact(e.target.value)} placeholder="+7 900 000-00-00" icon={<i data-lucide="phone" style={{ width: 17, height: 17 }}></i>} />
+              : <Input key="tg" label="Ваш @никнейм" required value={contact} onChange={(e) => setContact(e.target.value)} placeholder="@username" icon={<i data-lucide="at-sign" style={{ width: 17, height: 17 }}></i>} />}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+              {switches.map((s) => {
+                const on = opts[s.key];
+                return (
+                  <div key={s.key} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '10px 6px', borderRadius: 'var(--r-md)', background: on ? 'var(--glass-fill)' : 'transparent' }}>
+                    <i data-lucide={s.icon} style={{ width: 16, height: 16, flex: 'none', color: on ? 'var(--accent-violet)' : 'var(--ink-3)' }}></i>
+                    <span style={{ flex: 1, fontSize: 'var(--t-sm)', color: on ? 'var(--text-strong)' : 'var(--text-body)' }}>{s.label}</span>
+                    <Switch checked={on} onChange={(v) => setOpt(s.key, v)} size="sm" accent="var(--grad-twilight)" />
+                  </div>
+                );
+              })}
+            </div>
+            {error && (
+              <div style={{ padding: '10px 14px', borderRadius: 'var(--r-md)', background: 'var(--danger-soft)', fontSize: 'var(--t-sm)', color: 'var(--text-body)' }}>{error}</div>
+            )}
+            <Button type="submit" variant="primary" size="lg" fullWidth disabled={sending}
+              iconRight={!sending && <i data-lucide="arrow-right" style={{ width: 18, height: 18 }}></i>}>
+              {sending ? 'Отправляем...' : 'Отправить заявку'}
+            </Button>
+          </form>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function LandingApp() {
+  const [menuOpen, setMenuOpen] = React.useState(false);
+  const [consultOpen, setConsultOpen] = React.useState(false);
+  const openConsult = React.useCallback(() => setConsultOpen(true), []);
+  React.useEffect(() => {
+    window.__openConsult = openConsult;
+    return () => { delete window.__openConsult; };
+  }, [openConsult]);
+  React.useEffect(() => {
+    if (window.lucide) window.lucide.createIcons();
+  });
+  React.useEffect(() => { document.body.style.overflow = menuOpen ? 'hidden' : ''; }, [menuOpen]);
+  return (
+    <React.Fragment>
+      <Header onOpenMenu={() => setMenuOpen(true)} onOpenConsult={openConsult} />
+      <MobileMenu open={menuOpen} onClose={() => setMenuOpen(false)} onOpenConsult={openConsult} />
+      <ConsultModal open={consultOpen} onClose={() => setConsultOpen(false)} />
+      <main><LandingPage /></main>
+      <Footer />
+    </React.Fragment>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<LandingApp />);
+setTimeout(() => window.lucide && window.lucide.createIcons(), 80);
+"""
+
+LANDING_PAGE_JS = r"""/* global React */
 function LandingPage() {
   const { Badge } = window.RoyalVisaUKDesignSystem_ccc97c;
 
@@ -1659,8 +1847,7 @@ function LandingPage() {
   );
 }
 
-ReactDOM.createRoot(document.getElementById('root')).render(<LandingPage />);
-setTimeout(() => window.lucide && window.lucide.createIcons(), 80);
+Object.assign(window, { LandingPage });
 """
 
 # ─── build functions ──────────────────────────────────────────────────────────
@@ -1776,8 +1963,12 @@ def build_schengen():
 def build_index():
     lines, manifest = load_bundle(SOURCE)
 
-    # Landing page app with banner
-    manifest[UUID_APP]['data'] = pack(LANDING_APP)
+    # Updated header + footer so landing page has nav
+    manifest[UUID_HEADER]['data'] = pack(HEADER_JS)
+    manifest[UUID_FOOTER]['data'] = pack(FOOTER_JS)
+
+    # Landing page: LandingPage component + full app wrapper with nav
+    manifest[UUID_APP]['data'] = pack(LANDING_PAGE_JS + '\n' + LANDING_APP)
 
     # Updated wordmark
     manifest[UUID_WORDMARK]['data'] = pack(WORDMARK_SVG)
