@@ -62,6 +62,9 @@ def write_bundle(lines, manifest, out_path: str, title: str, *,
     raw_json = tline[tstart:tend]
     template_str = json.loads(raw_json)
 
+    # Update <title> inside the template HTML (before JSON encoding)
+    template_str = re.sub(r'<title>[^<]*</title>', f'<title>{title}</title>', template_str)
+
     # Inject favicon link in <head>
     if favicon_uuid:
         favicon_link = f'<link rel="icon" type="image/png" href="{favicon_uuid}">'
@@ -1705,7 +1708,7 @@ function ConsultModal({ open, onClose }) {
       if (!jr.ok) throw new Error(jr.description || 'send failed');
       setSent(true);
     } catch (err) {
-      setError('Не удалось отправить заявку. Напишите нам напрямую в WhatsApp или Telegram.');
+      setError('Не удалось отправить заявку. Напишите нам напрямую в WhatsApp или Telegram - кнопки в подвале.');
     } finally {
       setSending(false);
     }
@@ -1731,15 +1734,16 @@ function ConsultModal({ open, onClose }) {
         opacity: open ? 1 : 0, transition: 'opacity .28s ease',
       }} />
       <div role="dialog" aria-modal="true" style={{
-        position: 'relative', width: '100%', maxWidth: 560, maxHeight: '90vh', overflowY: 'auto',
+        position: 'relative', width: '100%', maxWidth: 960,
+        maxHeight: '90vh', overflowY: 'auto',
         borderRadius: 'var(--r-2xl)',
-        background: 'var(--glass-fill-strong)', border: '1px solid var(--glass-edge-strong)',
+        background: 'var(--glass-fill-strong)',
+        border: '1px solid var(--glass-edge-strong)',
         backdropFilter: 'var(--glass-blur-heavy)', WebkitBackdropFilter: 'var(--glass-blur-heavy)',
         boxShadow: 'var(--elev-4), var(--glass-inner)',
         transform: open ? 'translateY(0) scale(1)' : 'translateY(14px) scale(0.97)',
         opacity: open ? 1 : 0,
         transition: 'transform .32s cubic-bezier(.2,.8,.2,1), opacity .26s ease',
-        padding: 32,
       }}>
         <button aria-label="Закрыть" onClick={onClose} style={{
           position: 'absolute', top: 16, right: 16, zIndex: 10,
@@ -1749,65 +1753,87 @@ function ConsultModal({ open, onClose }) {
         }}>
           <i data-lucide="x" style={{ width: 18, height: 18, color: 'var(--text-strong)' }}></i>
         </button>
-        <div style={{ textAlign: 'center', marginBottom: 20 }}>
-          <span className="rv-eyebrow">Бесплатная консультация</span>
-          <p style={{ marginTop: 10, fontSize: 'var(--t-body)', color: 'var(--text-body)' }}>Расскажем, какая виза подходит именно вам, и как быстро её получить.</p>
-        </div>
-        {sent ? (
-          <div style={{ textAlign: 'center', padding: '24px 0', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 14 }}>
-            <div style={{ width: 64, height: 64, borderRadius: '50%', background: 'var(--success-soft)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <i data-lucide="check" style={{ width: 30, height: 30, color: 'var(--success)' }}></i>
-            </div>
-            <h3 style={{ fontSize: 'var(--t-h3)' }}>Заявка отправлена</h3>
-            <p style={{ color: 'var(--text-muted)' }}>Свяжемся с вами в ближайшее время.</p>
-            <Button variant="ghost" size="sm" onClick={() => { setSent(false); setName(''); setContact(''); }}>Отправить ещё одну</Button>
+
+        <div style={{ padding: '20px 8px 8px' }}>
+          <div style={{ textAlign: 'center', maxWidth: 620, margin: '0 auto 20px' }}>
+            <span className="rv-eyebrow">Бесплатная консультация</span>
+            <p style={{ marginTop: 10, fontSize: 'var(--t-lg)', color: 'var(--text-body)' }}>
+              Расскажем, какая виза подходит именно вам, и как быстро её получить.
+            </p>
           </div>
-        ) : (
-          <form onSubmit={submit} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-            <Input label="Имя" placeholder="Как к вам обращаться" required value={name} onChange={(e) => setName(e.target.value)} icon={<i data-lucide="user-round" style={{ width: 17, height: 17 }}></i>} />
-            <div>
-              <div style={{ fontSize: 'var(--t-sm)', fontWeight: 500, color: 'var(--text-body)', marginBottom: 8 }}>Куда вам написать</div>
-              <div style={{ display: 'flex', gap: 10 }}>
-                {['whatsapp', 'telegram'].map((ch) => (
-                  <button key={ch} type="button" onClick={() => { setChannel(ch); setContact(''); setError(''); }} style={{
-                    flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 9,
-                    height: 48, cursor: 'pointer', borderRadius: 'var(--r-md)',
-                    fontFamily: 'var(--font-sans)', fontSize: 'var(--t-body)', fontWeight: 600,
-                    color: channel === ch ? '#fff' : 'var(--text-body)',
-                    background: channel === ch ? 'var(--grad-twilight)' : 'var(--glass-fill)',
-                    border: ('1px solid ' + (channel === ch ? 'rgba(255,255,255,0.2)' : 'var(--glass-edge)')),
-                    transition: 'all .2s ease',
-                  }}>
-                    <i data-lucide={ch === 'whatsapp' ? 'message-circle' : 'send'} style={{ width: 19, height: 19 }}></i>
-                    {ch === 'whatsapp' ? 'WhatsApp' : 'Telegram'}
-                  </button>
-                ))}
+
+          <div style={{ padding: 8 }}>
+            <div className="rv-form-grid" style={{ display: 'grid', gridTemplateColumns: '1.1fr 0.9fr', gap: 8 }}>
+              <div style={{ padding: 28 }}>
+                {sent ? (
+                  <div style={{ height: '100%', minHeight: 300, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center', gap: 14 }}>
+                    <div style={{ width: 64, height: 64, borderRadius: '50%', background: 'var(--success-soft)', border: '1px solid rgba(111,174,143,0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                      <i data-lucide="check" style={{ width: 30, height: 30, color: 'var(--success)' }}></i>
+                    </div>
+                    <h3 style={{ fontSize: 'var(--t-h3)' }}>Заявка отправлена</h3>
+                    <p style={{ color: 'var(--text-muted)', maxWidth: 320 }}>Свяжемся с вами в {channel === 'whatsapp' ? 'WhatsApp' : 'Telegram'} в ближайшее время.</p>
+                    <Button variant="ghost" size="sm" onClick={() => { setSent(false); setName(''); setContact(''); }}>Отправить ещё одну</Button>
+                  </div>
+                ) : (
+                  <form onSubmit={submit} style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
+                    <Input label="Имя" placeholder="Как к вам обращаться" required value={name} onChange={(e) => setName(e.target.value)} icon={<i data-lucide="user-round" style={{ width: 17, height: 17 }}></i>} />
+                    <div>
+                      <div style={{ fontSize: 'var(--t-sm)', fontWeight: 500, color: 'var(--text-body)', marginBottom: 8 }}>Куда вам написать</div>
+                      <div style={{ display: 'flex', gap: 10 }}>
+                        {['whatsapp', 'telegram'].map((ch) => (
+                          <button key={ch} type="button" onClick={() => { setChannel(ch); setContact(''); setError(''); }} style={{
+                            flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 9,
+                            height: 48, cursor: 'pointer', borderRadius: 'var(--r-md)',
+                            fontFamily: 'var(--font-sans)', fontSize: 'var(--t-body)', fontWeight: 600,
+                            color: channel === ch ? '#fff' : 'var(--text-body)',
+                            background: channel === ch ? 'var(--grad-twilight)' : 'var(--glass-fill)',
+                            border: `1px solid ${channel === ch ? 'rgba(255,255,255,0.2)' : 'var(--glass-edge)'}`,
+                            boxShadow: channel === ch ? 'var(--glow-steel), var(--glass-inner)' : 'var(--glass-inner-soft)',
+                            backdropFilter: 'var(--glass-blur)', WebkitBackdropFilter: 'var(--glass-blur)',
+                            transition: 'all .2s ease',
+                          }}>
+                            <i data-lucide={ch === 'whatsapp' ? 'message-circle' : 'send'} style={{ width: 19, height: 19 }}></i>
+                            {ch === 'whatsapp' ? 'WhatsApp' : 'Telegram'}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                    {channel === 'whatsapp'
+                      ? <Input key="wa" label="Номер телефона" type="tel" required value={contact} onChange={(e) => setContact(e.target.value)} placeholder="+7 900 000-00-00" icon={<i data-lucide="phone" style={{ width: 17, height: 17 }}></i>} />
+                      : <Input key="tg" label="Ваш @никнейм" required value={contact} onChange={(e) => setContact(e.target.value)} placeholder="@username" icon={<i data-lucide="at-sign" style={{ width: 17, height: 17 }}></i>} />}
+                    {error && (
+                      <div style={{ display: 'flex', gap: 9, alignItems: 'flex-start', padding: '12px 14px', borderRadius: 'var(--r-md)', background: 'var(--danger-soft)', border: '1px solid rgba(201,122,130,0.35)' }}>
+                        <i data-lucide="triangle-alert" style={{ width: 17, height: 17, marginTop: 1, flex: 'none', color: 'var(--danger)' }}></i>
+                        <span style={{ fontSize: 'var(--t-sm)', color: 'var(--text-body)', lineHeight: 1.45 }}>{error}</span>
+                      </div>
+                    )}
+                    <div style={{ marginTop: 4 }}>
+                      <Button type="submit" variant="primary" size="lg" fullWidth disabled={sending} iconRight={!sending && <i data-lucide="arrow-right" style={{ width: 18, height: 18 }}></i>}>
+                        {sending ? 'Отправляем...' : 'Отправить заявку'}
+                      </Button>
+                    </div>
+                  </form>
+                )}
+              </div>
+
+              <div style={{ padding: 28, borderRadius: 'var(--r-xl)', background: 'var(--glass-fill)', border: '1px solid var(--glass-edge-faint)' }}>
+                <div style={{ fontSize: 'var(--t-sm)', fontWeight: 600, letterSpacing: 'var(--track-eyebrow)', textTransform: 'uppercase', color: 'var(--text-muted)', marginBottom: 18 }}>Когда удобно</div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+                  {switches.map((s) => {
+                    const on = opts[s.key];
+                    return (
+                      <div key={s.key} style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '12px 8px', borderRadius: 'var(--r-md)', background: on ? 'var(--glass-fill)' : 'transparent', transition: 'background .2s ease' }}>
+                        <i data-lucide={s.icon} style={{ width: 18, height: 18, flex: 'none', color: on ? (s.key === 'urgent' ? 'var(--warning)' : 'var(--accent-violet)') : 'var(--ink-3)' }}></i>
+                        <span style={{ flex: 1, fontSize: 'var(--t-body)', color: on ? 'var(--text-strong)' : 'var(--text-body)' }}>{s.label}</span>
+                        <Switch checked={on} onChange={(v) => setOpt(s.key, v)} size="sm" accent={s.key === 'urgent' ? 'var(--grad-royal)' : 'var(--grad-twilight)'} />
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
             </div>
-            {channel === 'whatsapp'
-              ? <Input key="wa" label="Номер телефона" type="tel" required value={contact} onChange={(e) => setContact(e.target.value)} placeholder="+7 900 000-00-00" icon={<i data-lucide="phone" style={{ width: 17, height: 17 }}></i>} />
-              : <Input key="tg" label="Ваш @никнейм" required value={contact} onChange={(e) => setContact(e.target.value)} placeholder="@username" icon={<i data-lucide="at-sign" style={{ width: 17, height: 17 }}></i>} />}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-              {switches.map((s) => {
-                const on = opts[s.key];
-                return (
-                  <div key={s.key} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '10px 6px', borderRadius: 'var(--r-md)', background: on ? 'var(--glass-fill)' : 'transparent' }}>
-                    <i data-lucide={s.icon} style={{ width: 16, height: 16, flex: 'none', color: on ? 'var(--accent-violet)' : 'var(--ink-3)' }}></i>
-                    <span style={{ flex: 1, fontSize: 'var(--t-sm)', color: on ? 'var(--text-strong)' : 'var(--text-body)' }}>{s.label}</span>
-                    <Switch checked={on} onChange={(v) => setOpt(s.key, v)} size="sm" accent="var(--grad-twilight)" />
-                  </div>
-                );
-              })}
-            </div>
-            {error && (
-              <div style={{ padding: '10px 14px', borderRadius: 'var(--r-md)', background: 'var(--danger-soft)', fontSize: 'var(--t-sm)', color: 'var(--text-body)' }}>{error}</div>
-            )}
-            <Button type="submit" variant="primary" size="lg" fullWidth disabled={sending}
-              iconRight={!sending && <i data-lucide="arrow-right" style={{ width: 18, height: 18 }}></i>}>
-              {sending ? 'Отправляем...' : 'Отправить заявку'}
-            </Button>
-          </form>
-        )}
+          </div>
+        </div>
       </div>
     </div>
   );
@@ -2004,7 +2030,7 @@ def build_uk():
     ]
 
     write_bundle(lines, manifest, '/home/user/ukvisa/uk.html',
-                 'Royal Visas - Визы в Великобританию',
+                 'Royal Visas - Визы в Европу и Великобританию',
                  ext_resources=ext_resources,
                  favicon_uuid=UUID_FAVICON)
 
@@ -2067,7 +2093,7 @@ def build_schengen():
     ]
 
     write_bundle(lines, manifest, '/home/user/ukvisa/schengen.html',
-                 'Royal Visas - Шенгенская виза',
+                 'Royal Visas - Визы в Европу и Великобританию',
                  ext_resources=ext_resources,
                  favicon_uuid=UUID_FAVICON)
 
