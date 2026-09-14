@@ -1,0 +1,750 @@
+/* ============================================================
+   Royal Visa UK - Design System
+   Global entry point. Consumers link THIS file only.
+   (Import list only - no rules live here.)
+   ============================================================ */
+
+/* ============================================================
+   Royal Visa UK - Webfonts
+   ------------------------------------------------------------
+   No brand font files were provided. The requested direction was
+   an "Apple-like system sans (SF-like)". SF Pro is not licensable
+   for web embedding, so we substitute GEIST - a clean, neutral,
+   SF-adjacent grotesque - plus GEIST MONO for numerals / reference
+   codes. Swap these @font-face declarations for self-hosted SF if
+   a license is obtained.
+   ============================================================ */
+
+/* cyrillic-ext */
+@font-face {
+  font-family: 'Geist';
+  font-style: normal;
+  font-weight: 300;
+  font-display: swap;
+  src: url("../fonts/1e33dd7a-0230-45fc-bf34-d4b82b13d923.woff2") format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+/* cyrillic */
+@font-face {
+  font-family: 'Geist';
+  font-style: normal;
+  font-weight: 300;
+  font-display: swap;
+  src: url("../fonts/1efc6368-f60c-4d3a-bdb2-b5764e015887.woff2") format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'Geist';
+  font-style: normal;
+  font-weight: 300;
+  font-display: swap;
+  src: url("../fonts/df7030a4-e825-430e-aecb-3e14cf1caacb.woff2") format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Geist';
+  font-style: normal;
+  font-weight: 300;
+  font-display: swap;
+  src: url("../fonts/5a020eb4-bda8-468b-93c3-3e099052efb1.woff2") format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Geist';
+  font-style: normal;
+  font-weight: 300;
+  font-display: swap;
+  src: url("../fonts/e73bcaa5-5a3b-4a4c-918c-ae6321eeb51e.woff2") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* cyrillic-ext */
+@font-face {
+  font-family: 'Geist';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("../fonts/1e33dd7a-0230-45fc-bf34-d4b82b13d923.woff2") format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+/* cyrillic */
+@font-face {
+  font-family: 'Geist';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("../fonts/1efc6368-f60c-4d3a-bdb2-b5764e015887.woff2") format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'Geist';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("../fonts/df7030a4-e825-430e-aecb-3e14cf1caacb.woff2") format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Geist';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("../fonts/5a020eb4-bda8-468b-93c3-3e099052efb1.woff2") format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Geist';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("../fonts/e73bcaa5-5a3b-4a4c-918c-ae6321eeb51e.woff2") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* cyrillic-ext */
+@font-face {
+  font-family: 'Geist';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("../fonts/1e33dd7a-0230-45fc-bf34-d4b82b13d923.woff2") format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+/* cyrillic */
+@font-face {
+  font-family: 'Geist';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("../fonts/1efc6368-f60c-4d3a-bdb2-b5764e015887.woff2") format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'Geist';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("../fonts/df7030a4-e825-430e-aecb-3e14cf1caacb.woff2") format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Geist';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("../fonts/5a020eb4-bda8-468b-93c3-3e099052efb1.woff2") format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Geist';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("../fonts/e73bcaa5-5a3b-4a4c-918c-ae6321eeb51e.woff2") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* cyrillic-ext */
+@font-face {
+  font-family: 'Geist';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("../fonts/1e33dd7a-0230-45fc-bf34-d4b82b13d923.woff2") format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+/* cyrillic */
+@font-face {
+  font-family: 'Geist';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("../fonts/1efc6368-f60c-4d3a-bdb2-b5764e015887.woff2") format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'Geist';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("../fonts/df7030a4-e825-430e-aecb-3e14cf1caacb.woff2") format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Geist';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("../fonts/5a020eb4-bda8-468b-93c3-3e099052efb1.woff2") format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Geist';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("../fonts/e73bcaa5-5a3b-4a4c-918c-ae6321eeb51e.woff2") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* cyrillic-ext */
+@font-face {
+  font-family: 'Geist';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("../fonts/1e33dd7a-0230-45fc-bf34-d4b82b13d923.woff2") format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+/* cyrillic */
+@font-face {
+  font-family: 'Geist';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("../fonts/1efc6368-f60c-4d3a-bdb2-b5764e015887.woff2") format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'Geist';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("../fonts/df7030a4-e825-430e-aecb-3e14cf1caacb.woff2") format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Geist';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("../fonts/5a020eb4-bda8-468b-93c3-3e099052efb1.woff2") format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Geist';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("../fonts/e73bcaa5-5a3b-4a4c-918c-ae6321eeb51e.woff2") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* cyrillic-ext */
+@font-face {
+  font-family: 'Geist Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("../fonts/cef9d706-091b-4a8f-b2ac-5ff7bf7257a4.woff2") format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+/* cyrillic */
+@font-face {
+  font-family: 'Geist Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("../fonts/bad3f57a-4efb-43fa-a977-ce5ef5c4ef1c.woff2") format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+/* symbols2 */
+@font-face {
+  font-family: 'Geist Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("../fonts/616048bd-9520-43d0-8259-88c086e65947.woff2") format('woff2');
+  unicode-range: U+2000-2001, U+2004-2008, U+200A, U+23B8-23BD, U+2500-259F;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'Geist Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("../fonts/20e29c73-58ff-47b1-95d7-6414b5d70769.woff2") format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Geist Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("../fonts/a0fa6c07-be8b-44a3-bc0e-bc531b31a2af.woff2") format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Geist Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("../fonts/767ead73-eb57-43ce-a7f2-4848e2571b6b.woff2") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* cyrillic-ext */
+@font-face {
+  font-family: 'Geist Mono';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("../fonts/cef9d706-091b-4a8f-b2ac-5ff7bf7257a4.woff2") format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+/* cyrillic */
+@font-face {
+  font-family: 'Geist Mono';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("../fonts/bad3f57a-4efb-43fa-a977-ce5ef5c4ef1c.woff2") format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+/* symbols2 */
+@font-face {
+  font-family: 'Geist Mono';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("../fonts/616048bd-9520-43d0-8259-88c086e65947.woff2") format('woff2');
+  unicode-range: U+2000-2001, U+2004-2008, U+200A, U+23B8-23BD, U+2500-259F;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'Geist Mono';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("../fonts/20e29c73-58ff-47b1-95d7-6414b5d70769.woff2") format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Geist Mono';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("../fonts/a0fa6c07-be8b-44a3-bc0e-bc531b31a2af.woff2") format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Geist Mono';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("../fonts/767ead73-eb57-43ce-a7f2-4848e2571b6b.woff2") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* cyrillic-ext */
+@font-face {
+  font-family: 'Geist Mono';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("../fonts/cef9d706-091b-4a8f-b2ac-5ff7bf7257a4.woff2") format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+/* cyrillic */
+@font-face {
+  font-family: 'Geist Mono';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("../fonts/bad3f57a-4efb-43fa-a977-ce5ef5c4ef1c.woff2") format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+/* symbols2 */
+@font-face {
+  font-family: 'Geist Mono';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("../fonts/616048bd-9520-43d0-8259-88c086e65947.woff2") format('woff2');
+  unicode-range: U+2000-2001, U+2004-2008, U+200A, U+23B8-23BD, U+2500-259F;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'Geist Mono';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("../fonts/20e29c73-58ff-47b1-95d7-6414b5d70769.woff2") format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Geist Mono';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("../fonts/a0fa6c07-be8b-44a3-bc0e-bc531b31a2af.woff2") format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Geist Mono';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("../fonts/767ead73-eb57-43ce-a7f2-4848e2571b6b.woff2") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+
+/* ============================================================
+   Royal Visa UK - Color System  (DARK ONLY)
+   ------------------------------------------------------------
+   Philosophy: the interface is built from NEUTRAL translucent
+   glass over a deep indigo-black field. The muted brand palette
+   appears only as ACCENTS - never as large flat fills.
+   ============================================================ */
+
+:root {
+  /* --- Brand palette (the six moodboard hues, raw) --- */
+  --brand-lavender: #8a7ba0;   /* muted violet-grey  */
+  --brand-indigo:   #3f2b5e;   /* deep royal indigo  */
+  --brand-sky:      #9cb8d0;   /* powder blue        */
+  --brand-steel:    #365774;   /* steel navy         */
+  --brand-mauve:    #956786;   /* dusty orchid       */
+  --brand-plum:     #6f345c;   /* wine plum          */
+
+  /* Brightened accent variants (legible on dark glass) */
+  --accent-violet:  #b6a6d6;
+  --accent-sky:     #b9d2e6;
+  --accent-mauve:   #c08fae;
+  --accent-steel:   #6f9cc0;
+
+  /* --- Dark field ramp (the canvas behind the glass) --- */
+  --field-900: #08070d;   /* deepest - page base        */
+  --field-800: #0d0b16;   /* base surface               */
+  --field-700: #14111f;   /* raised solid               */
+  --field-600: #1c1828;   /* hairline-separated solid   */
+  --field-500: #261f34;   /* hover-lifted solid         */
+
+  /* --- Neutral text on dark --- */
+  --ink-1: rgba(255,255,255,0.96);  /* primary headings/body  */
+  --ink-2: rgba(255,255,255,0.66);  /* secondary / supporting */
+  --ink-3: rgba(255,255,255,0.44);  /* tertiary / captions    */
+  --ink-4: rgba(255,255,255,0.26);  /* disabled / faint       */
+  --ink-on-accent: #0a0810;         /* text on a light accent */
+
+  /* --- Semantic (kept cool & muted to fit the palette) --- */
+  --success: #6fae8f;
+  --success-soft: rgba(111,174,143,0.16);
+  --warning: #d4a25e;
+  --warning-soft: rgba(212,162,94,0.16);
+  --danger:  #c97a82;
+  --danger-soft: rgba(201,122,130,0.16);
+  --info:    var(--accent-sky);
+  --info-soft: rgba(156,184,208,0.16);
+
+  /* --- Signature brand gradients (accents only) --- */
+  --grad-royal: linear-gradient(135deg, #3f2b5e 0%, #6f345c 52%, #956786 100%);  /* @kind color */
+  --grad-twilight: linear-gradient(135deg, #365774 0%, #3f2b5e 60%, #6f345c 100%);  /* @kind color */
+  --grad-sky: linear-gradient(135deg, #9cb8d0 0%, #6f9cc0 50%, #365774 100%);  /* @kind color */
+  --grad-sheen: linear-gradient(120deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.18) 45%, rgba(255,255,255,0) 70%);  /* @kind color */
+
+  /* --- Semantic surface aliases --- */
+  --page-bg: var(--field-900);
+  --text-strong: var(--ink-1);
+  --text-body: var(--ink-2);
+  --text-muted: var(--ink-3);
+  --accent: var(--brand-lavender);
+  --accent-bright: var(--accent-violet);
+  --link: var(--accent-sky);
+}
+
+/* ============================================================
+   Royal Visa UK - Typography
+   Geist (SF-like neutral grotesque) + Geist Mono for numerals.
+   ============================================================ */
+
+:root {
+  /* Families */
+  --font-sans: 'Geist', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-mono: 'Geist Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+
+  /* Weights */
+  --w-light: 300;     /* @kind font */
+  --w-regular: 400;   /* @kind font */
+  --w-medium: 500;    /* @kind font */
+  --w-semibold: 600;  /* @kind font */
+  --w-bold: 700;      /* @kind font */
+
+  /* Fluid display + static text scale */
+  --t-display: clamp(3rem, 6vw, 5rem);        /* @kind font */
+  --t-h1: clamp(2.25rem, 4vw, 3.25rem);       /* @kind font */
+  --t-h2: clamp(1.75rem, 3vw, 2.25rem);       /* @kind font */
+  --t-h3: 1.5rem;     /* @kind font */
+  --t-h4: 1.25rem;    /* @kind font */
+  --t-lg: 1.125rem;   /* @kind font */
+  --t-body: 1rem;     /* @kind font */
+  --t-sm: 0.875rem;   /* @kind font */
+  --t-xs: 0.75rem;    /* @kind font */
+
+  /* Line heights */
+  --lh-tight: 1.04;   /* @kind font */
+  --lh-snug: 1.18;    /* @kind font */
+  --lh-normal: 1.5;   /* @kind font */
+  --lh-relaxed: 1.65; /* @kind font */
+
+  /* Tracking */
+  --track-tight: -0.03em;    /* @kind font */
+  --track-snug: -0.015em;    /* @kind font */
+  --track-normal: 0em;       /* @kind font */
+  --track-wide: 0.02em;      /* @kind font */
+  --track-eyebrow: 0.14em;   /* @kind font */
+
+  /* Semantic aliases */
+  --text-display-weight: var(--w-semibold);  /* @kind font */
+  --text-heading-weight: var(--w-semibold);  /* @kind font */
+  --text-body-weight: var(--w-regular);      /* @kind font */
+}
+
+/* ============================================================
+   Royal Visa UK - Spacing  (4px base grid)
+   ============================================================ */
+
+:root {
+  --space-0: 0;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+  --space-20: 80px;
+  --space-24: 96px;
+  --space-32: 128px;
+
+  /* Layout */
+  --container-max: 1200px;                    /* @kind spacing */
+  --container-pad: clamp(20px, 5vw, 64px);    /* @kind spacing */
+  --section-gap: clamp(45px, 7vw, 90px);    /* @kind spacing */
+  --gutter: 24px;                             /* @kind spacing */
+}
+
+/* ============================================================
+   Royal Visa UK - Radius
+   Liquid-glass shapes favour soft, continuous corners.
+   ============================================================ */
+
+:root {
+  --r-xs: 8px;
+  --r-sm: 12px;
+  --r-md: 16px;
+  --r-lg: 22px;
+  --r-xl: 28px;
+  --r-2xl: 36px;
+  --r-pill: 999px;   /* capsules: buttons, toggles, chips */
+  --r-circle: 50%;
+}
+
+/* ============================================================
+   Royal Visa UK - LIQUID GLASS
+   ------------------------------------------------------------
+   The core material. Every glass surface = a translucent neutral
+   fill + a backdrop blur + a bright top hairline + an inner sheen
+   + an outer drop shadow. Compose the variables below; do NOT
+   invent flat panels.
+
+   Recipe for any glass surface:
+     background: var(--glass-fill);
+     backdrop-filter: var(--glass-blur);
+     border: 1px solid var(--glass-edge);
+     box-shadow: var(--glass-shadow), var(--glass-inner);
+     border-radius: var(--r-lg);
+   ============================================================ */
+
+:root {
+  /* --- Fills (neutral white tints over the dark field) --- */
+  --glass-fill:        rgba(255,255,255,0.055);  /* default panel  */
+  --glass-fill-strong: rgba(255,255,255,0.09);   /* raised / hover */
+  --glass-fill-faint:  rgba(255,255,255,0.03);   /* large washes   */
+  --glass-fill-solid:  rgba(22,18,32,0.72);      /* nav / overlays */
+
+  /* Tinted glass (palette accent washes - use sparingly) */
+  --glass-tint-violet: rgba(138,123,160,0.16);
+  --glass-tint-sky:    rgba(156,184,208,0.14);
+  --glass-tint-mauve:  rgba(149,103,134,0.16);
+  --glass-tint-plum:   rgba(111,52,92,0.20);
+
+  /* --- Blur / refraction --- */
+  --glass-blur:        blur(20px) saturate(150%);   /* @kind other */
+  --glass-blur-heavy:  blur(36px) saturate(160%);   /* @kind other */
+  --glass-blur-light:  blur(10px) saturate(140%);   /* @kind other */
+
+  /* --- Edges (the lit rim of glass) --- */
+  --glass-edge:        rgba(255,255,255,0.14);
+  --glass-edge-strong: rgba(255,255,255,0.22);
+  --glass-edge-faint:  rgba(255,255,255,0.08);
+
+  /* --- Inner sheen (top-lit highlight, bottom shade) --- */
+  --glass-inner:
+    inset 0 1px 0 0 rgba(255,255,255,0.22),
+    inset 0 -1px 0 0 rgba(0,0,0,0.18);  /* @kind shadow */
+  --glass-inner-soft:
+    inset 0 1px 0 0 rgba(255,255,255,0.14);  /* @kind shadow */
+
+  /* --- Specular highlight gradient for "wet" caps/orbs --- */
+  --glass-specular:
+    radial-gradient(120% 80% at 30% 12%, rgba(255,255,255,0.40) 0%, rgba(255,255,255,0) 42%);  /* @kind color */
+
+  /* --- Frosted noise-free vignette to seat glass on the field --- */
+  --glass-seat: radial-gradient(140% 120% at 50% 0%, rgba(255,255,255,0.06), rgba(255,255,255,0) 60%);  /* @kind color */
+}
+
+/* ============================================================
+   Royal Visa UK - Elevation (shadows + accent glows)
+   On a dark field, depth reads through soft drop shadows plus a
+   faint coloured glow on interactive/brand elements.
+   ============================================================ */
+
+:root {
+  /* Neutral drop shadows (glass surfaces) */
+  --glass-shadow:    0 8px 28px -8px rgba(0,0,0,0.55), 0 2px 8px -2px rgba(0,0,0,0.40);
+  --elev-1: 0 2px 8px -2px rgba(0,0,0,0.45);
+  --elev-2: 0 10px 32px -10px rgba(0,0,0,0.60);
+  --elev-3: 0 24px 64px -16px rgba(0,0,0,0.70);
+  --elev-4: 0 40px 100px -24px rgba(0,0,0,0.78);
+
+  /* Accent glows (brand-coloured ambient light) */
+  --glow-violet: 0 8px 40px -8px rgba(138,123,160,0.45);
+  --glow-mauve:  0 8px 40px -8px rgba(149,103,134,0.45);
+  --glow-steel:  0 8px 40px -8px rgba(54,87,116,0.50);
+  --glow-soft:   0 0 0 1px rgba(255,255,255,0.05), 0 6px 24px -6px rgba(0,0,0,0.5);
+
+  /* Focus ring */
+  --focus-ring: 0 0 0 3px rgba(182,166,214,0.45);
+}
+
+/* ============================================================
+   Royal Visa UK - Base layer & glass utilities
+   ============================================================ */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-weight: var(--w-regular);
+  font-size: var(--t-body);
+  line-height: var(--lh-normal);
+  color: var(--text-body);
+  background:
+    radial-gradient(80% 60% at 78% -8%, rgba(111,52,92,0.30), transparent 55%),
+    radial-gradient(70% 55% at 12% 8%, rgba(54,87,116,0.28), transparent 52%),
+    radial-gradient(90% 70% at 50% 110%, rgba(63,43,94,0.34), transparent 60%),
+    var(--page-bg);
+  background-attachment: fixed;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+h1, h2, h3, h4 {
+  color: var(--text-strong);
+  font-weight: var(--w-semibold);
+  letter-spacing: var(--track-snug);
+  line-height: var(--lh-snug);
+  margin: 0;
+}
+
+a { color: var(--link); text-decoration: none; }
+
+/* --- Eyebrow / overline label --- */
+.rv-eyebrow {
+  font-size: var(--t-xs);
+  font-weight: var(--w-semibold);
+  letter-spacing: var(--track-eyebrow);
+  text-transform: uppercase;
+  color: var(--accent-bright);
+}
+
+/* --- Layout container --- */
+.rv-container {
+  width: 100%;
+  max-width: var(--container-max);
+  margin-inline: auto;
+  padding-inline: var(--container-pad);
+}
+
+/* --- Reusable glass surface utilities --- */
+.rv-glass {
+  background: var(--glass-fill);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-edge);
+  box-shadow: var(--glass-shadow), var(--glass-inner);
+  border-radius: var(--r-lg);
+}
+.rv-glass-strong {
+  background: var(--glass-fill-strong);
+  backdrop-filter: var(--glass-blur-heavy);
+  -webkit-backdrop-filter: var(--glass-blur-heavy);
+  border: 1px solid var(--glass-edge-strong);
+  box-shadow: var(--elev-2), var(--glass-inner);
+  border-radius: var(--r-xl);
+}
+
+/* Specular cap for "wet" glass orbs/capsules */
+.rv-specular::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: var(--glass-specular);
+  pointer-events: none;
+}
+
+::selection { background: rgba(182,166,214,0.35); color: #fff; }
+
+
+
+  html { scroll-behavior: smooth; }
+  .rv-burger { display: none; }
+  @media (max-width: 900px) {
+    .rv-desktop-nav { display: none !important; }
+    .rv-burger { display: flex !important; }
+    .rv-hero-grid, .rv-about-grid, .rv-tariffs, .rv-form-grid { grid-template-columns: 1fr !important; }
+    .rv-hero-grid { gap: 40px !important; }
+    .rv-hero-copy { text-align: center; }
+    .rv-hero-copy .rv-hero-lead { margin-left: auto; margin-right: auto; }
+    .rv-hero-copy .rv-hero-actions { justify-content: center; }
+    .rv-hero-copy .rv-hero-stats { justify-content: center; }
+    .rv-map-grid { grid-template-columns: 1fr !important; gap: 16px !important; }
+    .rv-map-grid > div:nth-child(2) { order: -1; }
+    .rv-nation { text-align: left !important; }
+    .rv-nation-head { justify-content: flex-start !important; }
+    .rv-about-grid > div:first-child { order: 2; }
+    /* About: center heading & lead, keep advantage cards left */
+    .rv-about-copy { text-align: center; }
+    .rv-about-copy .rv-about-points { text-align: left; }
+    /* Tariffs: center name, tagline, price & fee; keep feature list left */
+    .rv-tariff-name, .rv-tariff-tagline, .rv-tariff-fee { text-align: center; }
+    .rv-tariff-price { justify-content: center; }
+  }
+  @media (max-width: 560px) {
+    .rv-footer-top { flex-direction: column; align-items: flex-start !important; }
+  }
+  @media (max-width: 900px) {
+    input, select, textarea { font-size: 16px !important; }
+  }
