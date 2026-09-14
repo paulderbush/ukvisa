@@ -65,6 +65,10 @@ def write_bundle(lines, manifest, out_path: str, title: str, *,
     # Update <title> inside the template HTML (before JSON encoding)
     template_str = re.sub(r'<title>[^<]*</title>', f'<title>{title}</title>', template_str)
 
+    # Hide #root until page script reveals it (prevents UK-app flash on non-UK pages)
+    hide_root_css = '<style>#root{opacity:0;transition:opacity .2s ease}</style>'
+    template_str = template_str.replace('</head>', hide_root_css + '</head>', 1)
+
     # Inject favicon link in <head>
     if favicon_uuid:
         favicon_link = f'<link rel="icon" type="image/png" href="{favicon_uuid}">'
@@ -340,6 +344,7 @@ function ConsultModal({ open, onClose }) {
   const PROMO_CODES_LIST = typeof window.__promoCodes === 'object' ? window.__promoCodes : [];
 
   const { Button, Input, Switch } = window.RoyalVisaUKDesignSystem_ccc97c;
+  const [visible, setVisible] = React.useState(open);
   const [channel, setChannel] = React.useState('whatsapp');
   const [sent, setSent] = React.useState(false);
   const [name, setName] = React.useState('');
@@ -349,6 +354,12 @@ function ConsultModal({ open, onClose }) {
   const [sending, setSending] = React.useState(false);
   const [error, setError] = React.useState('');
   const [opts, setOpts] = React.useState({ weekdays: false, hours: false, anytime: true, urgent: false });
+
+  React.useEffect(() => {
+    if (open) { setVisible(true); return; }
+    const t = setTimeout(() => setVisible(false), 350);
+    return () => clearTimeout(t);
+  }, [open]);
 
   React.useEffect(() => {
     if (!open) return;
@@ -366,6 +377,8 @@ function ConsultModal({ open, onClose }) {
   React.useEffect(() => {
     if (open && window.lucide) setTimeout(() => window.lucide.createIcons(), 30);
   }, [open]);
+
+  if (!visible) return null;
 
   const validatePromo = (code) => {
     if (!code || !code.trim()) return null;
@@ -457,9 +470,9 @@ function ConsultModal({ open, onClose }) {
     }}>
       <div onClick={onClose} style={{
         position: 'absolute', inset: 0, background: 'rgba(8,7,13,0.65)',
-        backdropFilter: open ? 'blur(24px) saturate(140%)' : 'blur(0)',
-        WebkitBackdropFilter: open ? 'blur(24px) saturate(140%)' : 'blur(0)',
-        opacity: open ? 1 : 0, transition: 'opacity .28s ease',
+        backdropFilter: open ? 'blur(24px) saturate(140%)' : 'none',
+        WebkitBackdropFilter: open ? 'blur(24px) saturate(140%)' : 'none',
+        opacity: open ? 1 : 0, transition: 'opacity .28s ease, backdrop-filter .28s ease',
       }} />
       <div role="dialog" aria-modal="true" style={{
         position: 'relative', width: '100%', maxWidth: 960,
@@ -613,6 +626,7 @@ function App() {
 }
 
 ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+requestAnimationFrame(() => requestAnimationFrame(() => { var r = document.getElementById('root'); if (r) r.style.opacity = '1'; }));
 setTimeout(() => window.lucide && window.lucide.createIcons(), 80);
 """
 
@@ -1652,6 +1666,7 @@ function ConsultModal({ open, onClose }) {
   const PROMO_DISCOUNT = 5000;
 
   const { Button, Input, Switch } = window.RoyalVisaUKDesignSystem_ccc97c;
+  const [visible, setVisible] = React.useState(open);
   const [channel, setChannel] = React.useState('whatsapp');
   const [sent, setSent] = React.useState(false);
   const [name, setName] = React.useState('');
@@ -1659,6 +1674,12 @@ function ConsultModal({ open, onClose }) {
   const [sending, setSending] = React.useState(false);
   const [error, setError] = React.useState('');
   const [opts, setOpts] = React.useState({ weekdays: false, hours: false, anytime: true, urgent: false });
+
+  React.useEffect(() => {
+    if (open) { setVisible(true); return; }
+    const t = setTimeout(() => setVisible(false), 350);
+    return () => clearTimeout(t);
+  }, [open]);
 
   React.useEffect(() => {
     if (!open) return;
@@ -1676,6 +1697,8 @@ function ConsultModal({ open, onClose }) {
   React.useEffect(() => {
     if (open && window.lucide) setTimeout(() => window.lucide.createIcons(), 30);
   }, [open]);
+
+  if (!visible) return null;
 
   const setOpt = (k, v) => setOpts((p) => {
     const next = { ...p, [k]: v };
@@ -1729,9 +1752,9 @@ function ConsultModal({ open, onClose }) {
     }}>
       <div onClick={onClose} style={{
         position: 'absolute', inset: 0, background: 'rgba(8,7,13,0.65)',
-        backdropFilter: open ? 'blur(24px) saturate(140%)' : 'blur(0)',
-        WebkitBackdropFilter: open ? 'blur(24px) saturate(140%)' : 'blur(0)',
-        opacity: open ? 1 : 0, transition: 'opacity .28s ease',
+        backdropFilter: open ? 'blur(24px) saturate(140%)' : 'none',
+        WebkitBackdropFilter: open ? 'blur(24px) saturate(140%)' : 'none',
+        opacity: open ? 1 : 0, transition: 'opacity .28s ease, backdrop-filter .28s ease',
       }} />
       <div role="dialog" aria-modal="true" style={{
         position: 'relative', width: '100%', maxWidth: 960,
@@ -1863,6 +1886,7 @@ function LandingApp() {
 }
 
 ReactDOM.createRoot(document.getElementById('root')).render(<LandingApp />);
+requestAnimationFrame(() => requestAnimationFrame(() => { var r = document.getElementById('root'); if (r) r.style.opacity = '1'; }));
 setTimeout(() => window.lucide && window.lucide.createIcons(), 80);
 """
 
