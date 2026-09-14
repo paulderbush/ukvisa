@@ -367,7 +367,7 @@ function ConsultModal({ open, onClose, visaLabel }) {
       }
       setSent(true);
     } catch (err) {
-      setError('Не удалось отправить заявку. Напишите нам напрямую в WhatsApp или Telegram — кнопки в подвале.');
+      setError('Не удалось отправить заявку. Напишите нам напрямую в WhatsApp или Telegram - кнопки в подвале.');
     } finally {
       setSending(false);
     }
@@ -610,7 +610,7 @@ function ConsultForm({ visaLabel }) {
       }
       setSent(true);
     } catch (err) {
-      setError('Не удалось отправить заявку. Напишите нам напрямую в WhatsApp или Telegram — кнопки в подвале.');
+      setError('Не удалось отправить заявку. Напишите нам напрямую в WhatsApp или Telegram - кнопки в подвале.');
     } finally {
       setSending(false);
     }
@@ -635,7 +635,7 @@ function ConsultForm({ visaLabel }) {
       <div className="rv-container">
         <div style={{ textAlign: 'center', maxWidth: 620, margin: '0 auto 44px' }}>
           <span className="rv-eyebrow">Бесплатная консультация</span>
-          <h2 style={{ fontSize: 'var(--t-h1)', marginTop: 14 }}>Оставьте заявку — ответим в мессенджере</h2>
+          <h2 style={{ fontSize: 'var(--t-h1)', marginTop: 14 }}>Оставьте заявку - ответим в мессенджере</h2>
           <p style={{ marginTop: 16, fontSize: 'var(--t-lg)', color: 'var(--text-body)' }}>
             Расскажем, какая виза подходит именно вам, и как быстро её получить.
           </p>
@@ -730,7 +730,7 @@ function Hero() {
               <span style={{ background: 'var(--grad-royal)', WebkitBackgroundClip: 'text', backgroundClip: 'text', color: 'transparent' }}>с гарантией качества</span>
             </h1>
             <p className="rv-hero-lead" style={{ marginTop: 22, fontSize: 'var(--t-lg)', color: 'var(--text-body)', maxWidth: 520, lineHeight: 'var(--lh-relaxed)' }}>
-              Помогаем оформить визу в Великобританию под ключ — от анкеты до подачи. 96% одобрений.
+              Помогаем оформить визу в Великобританию под ключ - от анкеты до подачи. 96% одобрений.
             </p>
             <div className="rv-hero-actions" style={{ marginTop: 32, display: 'flex', gap: 14, flexWrap: 'wrap' }}>
               <Button variant="primary" size="lg" iconRight={<i data-lucide="arrow-right" style={{ width: 18, height: 18 }}></i>} onClick={() => { if (window.__openConsult) window.__openConsult(); }}>
@@ -768,9 +768,9 @@ UK_ABOUT_JS = r"""
 function AboutVisa() {
   const { Badge } = window.RoyalVisaUKDesignSystem_ccc97c;
   const points = [
-    { icon: 'calendar-check', title: 'Виза от 6 месяцев до 10 лет', text: 'Туристическая виза с многократным въездом — выбирайте срок под свои планы поездок.' },
-    { icon: 'globe', title: 'Вся Великобритания', text: 'Англия, Шотландия, Уэльс, Северная Ирландия — одна виза для всей страны.' },
-    { icon: 'shield-check', title: '96% одобрений', text: 'Правильно собранный пакет документов — главный фактор успеха. Берём это на себя.' },
+    { icon: 'calendar-check', title: 'Виза от 6 месяцев до 10 лет', text: 'Туристическая виза с многократным въездом - выбирайте срок под свои планы поездок.' },
+    { icon: 'globe', title: 'Вся Великобритания', text: 'Англия, Шотландия, Уэльс, Северная Ирландия - одна виза для всей страны.' },
+    { icon: 'shield-check', title: '96% одобрений', text: 'Правильно собранный пакет документов - главный фактор успеха. Берём это на себя.' },
   ];
   return (
     <section id="about" style={{ paddingBlock: 'var(--section-gap)' }}>
@@ -787,7 +787,7 @@ function AboutVisa() {
             </div>
             <h2 style={{ fontSize: 'var(--t-h2)' }}>Великобритания открыта для вас</h2>
             <p style={{ marginTop: 18, fontSize: 'var(--t-lg)', color: 'var(--text-body)', lineHeight: 'var(--lh-relaxed)' }}>
-              Британская туристическая виза — один из самых надёжных вариантов для путешествий. Правильно оформленный пакет документов существенно повышает шансы на одобрение.
+              Британская туристическая виза - один из самых надёжных вариантов для путешествий. Правильно оформленный пакет документов существенно повышает шансы на одобрение.
             </p>
             <div className="rv-about-points" style={{ marginTop: 28, display: 'flex', flexDirection: 'column', gap: 12 }}>
               {points.map((p) => (
@@ -813,13 +813,13 @@ function AboutVisa() {
 UK_MAP_JS = r"""
 const UK_NATIONS = {
   scotland: { name: 'Шотландия', capital: 'Эдинбург', accent: '#4d74d6', ref: [60, 100, 200],
-    note: 'Хайленд, виски и замки. Та же виза — без отдельного разрешения.' },
+    note: 'Хайленд, виски и замки. Та же виза - без отдельного разрешения.' },
   england: { name: 'Англия', capital: 'Лондон', accent: '#ef6a33', ref: [228, 85, 29],
     note: 'Лондон, Оксфорд, побережье. Сердце поездки по одной визе.' },
   wales: { name: 'Уэльс', capital: 'Кардифф', accent: '#f0c419', ref: [237, 196, 22],
-    note: 'Горы Сноудонии и старинные крепости — и снова без доплат.' },
+    note: 'Горы Сноудонии и старинные крепости - и снова без доплат.' },
   ni: { name: 'Северная Ирландия', capital: 'Белфаст', accent: '#56b061', ref: [86, 160, 84],
-    note: 'Та же виза действует и здесь — Дорога гигантов ждёт.' },
+    note: 'Та же виза действует и здесь - Дорога гигантов ждёт.' },
 };
 const NATION_ORDER = ['scotland', 'england', 'wales', 'ni'];
 
@@ -941,7 +941,7 @@ function InteractiveUKMap({ active, setActive }) {
       <div style={{ position: 'absolute', inset: '8% 12%', borderRadius: '50%', background: 'var(--grad-royal)', filter: 'blur(70px)', opacity: 0.3, zIndex: 0 }}></div>
       <img
         src="assets/photos/ukmap.png"
-        alt="Карта Великобритании — четыре части"
+        alt="Карта Великобритании - четыре части"
         style={{
           position: 'relative', zIndex: 1, display: 'block', width: '100%', height: 'auto',
           filter: active
@@ -969,10 +969,10 @@ function UKMap() {
       <div className="rv-container">
         <div style={{ textAlign: 'center', maxWidth: 680, margin: '0 auto 12px' }}>
           <span className="rv-eyebrow">Виза UK</span>
-          <h2 style={{ fontSize: 'var(--t-h1)', marginTop: 14 }}>Одна виза&nbsp;— четыре разных мира</h2>
+          <h2 style={{ fontSize: 'var(--t-h1)', marginTop: 14 }}>Одна виза&nbsp;- четыре разных мира</h2>
           <p style={{ marginTop: 16, fontSize: 'var(--t-lg)', color: 'var(--text-body)' }}>
             Мало кто знает: одна британская виза открывает все четыре части Королевства.
-            Англия, Шотландия, Уэльс и Северная Ирландия&nbsp;— без отдельных разрешений.
+            Англия, Шотландия, Уэльс и Северная Ирландия&nbsp;- без отдельных разрешений.
           </p>
         </div>
 
@@ -1035,7 +1035,7 @@ function FeeModal({ open, onClose }) {
           <i data-lucide="credit-card" style={{ width: 22, height: 22, color: 'var(--accent-sky)' }}></i>
         </div>
         <p style={{ margin: 0, fontSize: 'var(--t-lg)', color: 'var(--text-strong)', lineHeight: 1.45, fontWeight: 500 }}>
-          Консульский сбор оплачивается зарубежной банковской картой. Если у вас такой нет — мы поможем оплатить.
+          Консульский сбор оплачивается зарубежной банковской картой. Если у вас такой нет - мы поможем оплатить.
         </p>
         <div style={{ marginTop: 22, display: 'flex', flexDirection: 'column', gap: 2 }}>
           {CONSULAR_FEES.map((f, i) => (
@@ -1055,7 +1055,7 @@ function Services() {
   const [feeOpen, setFeeOpen] = React.useState(false);
   const tariff = {
     name: 'Всё включено',
-    tagline: 'Берём весь процесс на себя — от анкеты до подачи.',
+    tagline: 'Берём весь процесс на себя - от анкеты до подачи.',
     price: '29 990',
     features: [
       'Заполняем анкету за вас',
@@ -1069,7 +1069,7 @@ function Services() {
         <div style={{ textAlign: 'center', maxWidth: 620, margin: '0 auto 44px' }}>
           <span className="rv-eyebrow">Стоимость</span>
           <h2 style={{ fontSize: 'var(--t-h1)', marginTop: 14 }}>Всё включено</h2>
-          <p style={{ marginTop: 16, fontSize: 'var(--t-lg)', color: 'var(--text-body)' }}>Берём весь процесс на себя — вам остаётся только прийти на подачу.</p>
+          <p style={{ marginTop: 16, fontSize: 'var(--t-lg)', color: 'var(--text-body)' }}>Берём весь процесс на себя - вам остаётся только прийти на подачу.</p>
         </div>
         <div style={{ maxWidth: 760, margin: '0 auto', position: 'relative', padding: 30, borderRadius: 'var(--r-xl)', background: 'var(--glass-fill)', border: '1px solid var(--glass-edge)', backdropFilter: 'var(--glass-blur)', WebkitBackdropFilter: 'var(--glass-blur)', boxShadow: 'var(--glass-shadow), var(--glass-inner)', display: 'flex', flexDirection: 'column' }}>
           <h3 style={{ fontSize: 'var(--t-h3)' }}>{tariff.name}</h3>
@@ -1200,7 +1200,7 @@ SCHENGEN_ABOUT_JS = r"""
 function AboutVisa() {
   const points = [
     { icon: 'calendar-check', title: 'Выдают даже на 2 года', text: 'В 2026 году есть случаи выдачи шенгена на 2 года с многократным въездом.' },
-    { icon: 'globe', title: '27 стран по одной визе', text: 'Германия, Франция, Италия, Испания и ещё 23 страны — все по одному разрешению без дополнительных сборов.' },
+    { icon: 'globe', title: '27 стран по одной визе', text: 'Германия, Франция, Италия, Испания и ещё 23 страны - все по одному разрешению без дополнительных сборов.' },
     { icon: 'shield-check', title: 'Помогаем даже в сложных случаях', text: 'Знаем актуальные требования консульств и собираем убедительный пакет документов.' },
   ];
   return (
@@ -1208,9 +1208,9 @@ function AboutVisa() {
       <div className="rv-container">
         <div className="rv-about-copy">
           <div style={{ marginBottom: 18 }}><span className="rv-eyebrow">О визе</span></div>
-          <h2 style={{ fontSize: 'var(--t-h2)' }}>Европа открыта — в наше время</h2>
+          <h2 style={{ fontSize: 'var(--t-h2)' }}>Европа открыта - в наше время</h2>
           <p style={{ marginTop: 18, fontSize: 'var(--t-lg)', color: 'var(--text-body)', lineHeight: 'var(--lh-relaxed)' }}>
-            Шенген получить сложнее, чем раньше, но путешествовать по Европе в 2026 году — это реально. Правильно собранный пакет документов значительно повышает шансы на одобрение.
+            Шенген получить сложнее, чем раньше, но путешествовать по Европе в 2026 году - это реально. Правильно собранный пакет документов значительно повышает шансы на одобрение.
           </p>
           <div className="rv-about-points" style={{ marginTop: 28, display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: 12 }}>
             {points.map((p) => (
@@ -1282,8 +1282,8 @@ function UKMap() {
       <div className="rv-container">
         <div style={{ textAlign: 'center', maxWidth: 680, margin: '0 auto 44px' }}>
           <span className="rv-eyebrow">Шенгенская зона</span>
-          <h2 style={{ fontSize: 'var(--t-h1)', marginTop: 14 }}>Одна виза — вся Европа</h2>
-          <p style={{ marginTop: 16, fontSize: 'var(--t-lg)', color: 'var(--text-body)' }}>29 стран шенгенской зоны. Одна виза даёт доступ ко всем — без отдельных разрешений.</p>
+          <h2 style={{ fontSize: 'var(--t-h1)', marginTop: 14 }}>Одна виза - вся Европа</h2>
+          <p style={{ marginTop: 16, fontSize: 'var(--t-lg)', color: 'var(--text-body)' }}>29 стран шенгенской зоны. Одна виза даёт доступ ко всем - без отдельных разрешений.</p>
         </div>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 32 }}>
           {SCHENGEN_GEO_GROUPS.map((geo) => (
@@ -1351,7 +1351,7 @@ function FeeModal({ open, onClose }) {
           <i data-lucide="credit-card" style={{ width: 22, height: 22, color: 'var(--accent-sky)' }}></i>
         </div>
         <p style={{ margin: 0, fontSize: 'var(--t-lg)', color: 'var(--text-strong)', lineHeight: 1.45, fontWeight: 500 }}>
-          Консульский сбор оплачивается зарубежной банковской картой. Если у вас такой нет — мы поможем оплатить.
+          Консульский сбор оплачивается зарубежной банковской картой. Если у вас такой нет - мы поможем оплатить.
         </p>
         <div style={{ marginTop: 22, display: 'flex', flexDirection: 'column', gap: 2 }}>
           {SCHENGEN_CONSULAR_FEES.map((f, i) => (
@@ -1371,7 +1371,7 @@ function Services() {
   const [feeOpen, setFeeOpen] = React.useState(false);
   const tariff = {
     name: 'Всё включено',
-    tagline: 'Берём весь процесс на себя — от анкеты до подачи.',
+    tagline: 'Берём весь процесс на себя - от анкеты до подачи.',
     price: '29 990',
     features: ['Заполняем анкету за вас', 'Готовим полный пакет документов', 'Подбираем оптимальное консульство для подачи'],
   };
@@ -1381,7 +1381,7 @@ function Services() {
         <div style={{ textAlign: 'center', maxWidth: 620, margin: '0 auto 44px' }}>
           <span className="rv-eyebrow">Стоимость</span>
           <h2 style={{ fontSize: 'var(--t-h1)', marginTop: 14 }}>Всё включено</h2>
-          <p style={{ marginTop: 16, fontSize: 'var(--t-lg)', color: 'var(--text-body)' }}>Берём весь процесс на себя — вам остаётся только прийти на подачу.</p>
+          <p style={{ marginTop: 16, fontSize: 'var(--t-lg)', color: 'var(--text-body)' }}>Берём весь процесс на себя - вам остаётся только прийти на подачу.</p>
         </div>
         <div style={{ maxWidth: 760, margin: '0 auto', padding: 30, borderRadius: 'var(--r-xl)', background: 'var(--glass-fill)', border: '1px solid var(--glass-edge)', backdropFilter: 'var(--glass-blur)', WebkitBackdropFilter: 'var(--glass-blur)', boxShadow: 'var(--glass-shadow), var(--glass-inner)', display: 'flex', flexDirection: 'column' }}>
           <h3 style={{ fontSize: 'var(--t-h3)' }}>{tariff.name}</h3>
@@ -1491,7 +1491,7 @@ function LandingPage() {
           <span style={{ background: 'var(--grad-royal)', WebkitBackgroundClip: 'text', backgroundClip: 'text', color: 'transparent' }}>интересует?</span>
         </h1>
         <p style={{ marginTop: 16, fontSize: 'var(--t-lg)', color: 'var(--text-body)', maxWidth: 480, margin: '16px auto 0', lineHeight: 'var(--lh-relaxed)' }}>
-          Помогаем оформить визу под ключ — от анкеты до подачи документов.
+          Помогаем оформить визу под ключ - от анкеты до подачи документов.
         </p>
       </div>
       <div className="rv-landing-cards" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 20, width: '100%', maxWidth: 760 }}>
@@ -1521,7 +1521,7 @@ function LandingPage() {
         ))}
       </div>
       <p style={{ marginTop: 52, fontSize: 'var(--t-xs)', color: 'var(--text-muted)', textAlign: 'center', maxWidth: 520, lineHeight: 1.6 }}>
-        Royal Visas — частный визовый сервис. Мы не являемся государственным органом и не аффилированы с UKVI или посольствами. Решение по визе принимает консульство.
+        Royal Visas - частный визовый сервис. Мы не являемся государственным органом и не аффилированы с UKVI или посольствами. Решение по визе принимает консульство.
       </p>
     </div>
   );

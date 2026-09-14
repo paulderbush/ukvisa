@@ -309,7 +309,7 @@ function ConsultModal({ open, onClose, visaLabel }) {
       }
       setSent(true);
     } catch (err) {
-      setError('Не удалось отправить заявку. Напишите нам напрямую в WhatsApp или Telegram — кнопки в подвале.');
+      setError('Не удалось отправить заявку. Напишите нам напрямую в WhatsApp или Telegram - кнопки в подвале.');
     } finally {
       setSending(false);
     }
@@ -553,7 +553,7 @@ function ConsultForm({ visaLabel }) {
       }
       setSent(true);
     } catch (err) {
-      setError('Не удалось отправить заявку. Напишите нам напрямую в WhatsApp или Telegram — кнопки в подвале.');
+      setError('Не удалось отправить заявку. Напишите нам напрямую в WhatsApp или Telegram - кнопки в подвале.');
     } finally {
       setSending(false);
     }
@@ -578,7 +578,7 @@ function ConsultForm({ visaLabel }) {
       <div className="rv-container">
         <div style={{ textAlign: 'center', maxWidth: 620, margin: '0 auto 44px' }}>
           <span className="rv-eyebrow">Бесплатная консультация</span>
-          <h2 style={{ fontSize: 'var(--t-h1)', marginTop: 14 }}>Оставьте заявку — ответим в мессенджере</h2>
+          <h2 style={{ fontSize: 'var(--t-h1)', marginTop: 14 }}>Оставьте заявку - ответим в мессенджере</h2>
           <p style={{ marginTop: 16, fontSize: 'var(--t-lg)', color: 'var(--text-body)' }}>
             Расскажем, какая виза подходит именно вам, и как быстро её получить.
           </p>
@@ -716,7 +716,7 @@ function Hero() {
 function AboutVisa() {
   const points = [
     { icon: 'calendar-check', title: 'Выдают даже на 2 года', text: 'В 2026 году есть случаи выдачи шенгена на 2 года с многократным въездом.' },
-    { icon: 'globe', title: '27 стран по одной визе', text: 'Германия, Франция, Италия, Испания и ещё 23 страны — все по одному разрешению без дополнительных сборов.' },
+    { icon: 'globe', title: '27 стран по одной визе', text: 'Германия, Франция, Италия, Испания и ещё 23 страны - все по одному разрешению без дополнительных сборов.' },
     { icon: 'shield-check', title: 'Помогаем даже в сложных случаях', text: 'Знаем актуальные требования консульств и собираем убедительный пакет документов.' },
   ];
   return (
@@ -724,9 +724,9 @@ function AboutVisa() {
       <div className="rv-container">
         <div className="rv-about-copy">
           <div style={{ marginBottom: 18 }}><span className="rv-eyebrow">О визе</span></div>
-          <h2 style={{ fontSize: 'var(--t-h2)' }}>Европа открыта — в наше время</h2>
+          <h2 style={{ fontSize: 'var(--t-h2)' }}>Европа открыта - в наше время</h2>
           <p style={{ marginTop: 18, fontSize: 'var(--t-lg)', color: 'var(--text-body)', lineHeight: 'var(--lh-relaxed)' }}>
-            Шенген получить сложнее, чем раньше, но путешествовать по Европе в 2026 году — это реально. Правильно собранный пакет документов значительно повышает шансы на одобрение.
+            Шенген получить сложнее, чем раньше, но путешествовать по Европе в 2026 году - это реально. Правильно собранный пакет документов значительно повышает шансы на одобрение.
           </p>
           <div className="rv-about-points" style={{ marginTop: 28, display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: 12 }}>
             {points.map((p) => (
@@ -799,8 +799,8 @@ function UKMap() {
       <div className="rv-container">
         <div style={{ textAlign: 'center', maxWidth: 680, margin: '0 auto 44px' }}>
           <span className="rv-eyebrow">Шенгенская зона</span>
-          <h2 style={{ fontSize: 'var(--t-h1)', marginTop: 14 }}>Одна виза — вся Европа</h2>
-          <p style={{ marginTop: 16, fontSize: 'var(--t-lg)', color: 'var(--text-body)' }}>29 стран шенгенской зоны. Одна виза даёт доступ ко всем — без отдельных разрешений.</p>
+          <h2 style={{ fontSize: 'var(--t-h1)', marginTop: 14 }}>Одна виза - вся Европа</h2>
+          <p style={{ marginTop: 16, fontSize: 'var(--t-lg)', color: 'var(--text-body)' }}>29 стран шенгенской зоны. Одна виза даёт доступ ко всем - без отдельных разрешений.</p>
         </div>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 32 }}>
           {SCHENGEN_GEO_GROUPS.map((geo) => (
@@ -869,7 +869,7 @@ function FeeModal({ open, onClose }) {
           <i data-lucide="credit-card" style={{ width: 22, height: 22, color: 'var(--accent-sky)' }}></i>
         </div>
         <p style={{ margin: 0, fontSize: 'var(--t-lg)', color: 'var(--text-strong)', lineHeight: 1.45, fontWeight: 500 }}>
-          Консульский сбор оплачивается зарубежной банковской картой. Если у вас такой нет — мы поможем оплатить.
+          Консульский сбор оплачивается зарубежной банковской картой. Если у вас такой нет - мы поможем оплатить.
         </p>
         <div style={{ marginTop: 22, display: 'flex', flexDirection: 'column', gap: 2 }}>
           {SCHENGEN_CONSULAR_FEES.map((f, i) => (
@@ -889,7 +889,7 @@ function Services() {
   const [feeOpen, setFeeOpen] = React.useState(false);
   const tariff = {
     name: 'Всё включено',
-    tagline: 'Берём весь процесс на себя — от анкеты до подачи.',
+    tagline: 'Берём весь процесс на себя - от анкеты до подачи.',
     price: '29 990',
     features: ['Заполняем анкету за вас', 'Готовим полный пакет документов', 'Подбираем оптимальное консульство для подачи'],
   };
@@ -899,7 +899,7 @@ function Services() {
         <div style={{ textAlign: 'center', maxWidth: 620, margin: '0 auto 44px' }}>
           <span className="rv-eyebrow">Стоимость</span>
           <h2 style={{ fontSize: 'var(--t-h1)', marginTop: 14 }}>Всё включено</h2>
-          <p style={{ marginTop: 16, fontSize: 'var(--t-lg)', color: 'var(--text-body)' }}>Берём весь процесс на себя — вам остаётся только прийти на подачу.</p>
+          <p style={{ marginTop: 16, fontSize: 'var(--t-lg)', color: 'var(--text-body)' }}>Берём весь процесс на себя - вам остаётся только прийти на подачу.</p>
         </div>
         <div style={{ maxWidth: 760, margin: '0 auto', padding: 30, borderRadius: 'var(--r-xl)', background: 'var(--glass-fill)', border: '1px solid var(--glass-edge)', backdropFilter: 'var(--glass-blur)', WebkitBackdropFilter: 'var(--glass-blur)', boxShadow: 'var(--glass-shadow), var(--glass-inner)', display: 'flex', flexDirection: 'column' }}>
           <h3 style={{ fontSize: 'var(--t-h3)' }}>{tariff.name}</h3>
