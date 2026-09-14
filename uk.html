@@ -756,46 +756,181 @@ function AboutVisa() {
   <script type="text/babel">
 
 const UK_NATIONS = {
-  scotland: { name: 'Шотландия', cities: ['Эдинбург', 'Глазго', 'Инвернесс'] },
-  england:  { name: 'Англия',    cities: ['Лондон', 'Манчестер', 'Бирмингем', 'Ливерпуль'] },
-  wales:    { name: 'Уэльс',     cities: ['Кардифф', 'Суонси'] },
-  nireland: { name: 'Сев. Ирландия', cities: ['Белфаст'] },
+  scotland: { name: 'Шотландия', capital: 'Эдинбург', accent: '#4d74d6', ref: [60, 100, 200],
+    note: 'Хайленд, виски и замки. Та же виза — без отдельного разрешения.' },
+  england: { name: 'Англия', capital: 'Лондон', accent: '#ef6a33', ref: [228, 85, 29],
+    note: 'Лондон, Оксфорд, побережье. Сердце поездки по одной визе.' },
+  wales: { name: 'Уэльс', capital: 'Кардифф', accent: '#f0c419', ref: [237, 196, 22],
+    note: 'Горы Сноудонии и старинные крепости — и снова без доплат.' },
+  ni: { name: 'Северная Ирландия', capital: 'Белфаст', accent: '#56b061', ref: [86, 160, 84],
+    note: 'Та же виза действует и здесь — Дорога гигантов ждёт.' },
 };
+const NATION_ORDER = ['scotland', 'england', 'wales', 'ni'];
+
+function NationInfo({ id, active, onHover, align }) {
+  const n = UK_NATIONS[id];
+  const on = active === id;
+  const dim = active && !on;
+  return (
+    <div
+      className="rv-nation"
+      onMouseEnter={() => onHover(id)}
+      onMouseLeave={() => onHover(null)}
+      style={{
+        padding: 18, borderRadius: 'var(--r-lg)', cursor: 'default',
+        textAlign: align === 'right' ? 'right' : 'left',
+        background: on ? 'var(--glass-fill-strong)' : 'var(--glass-fill)',
+        border: `1px solid ${on ? n.accent : 'var(--glass-edge)'}`,
+        backdropFilter: 'var(--glass-blur)', WebkitBackdropFilter: 'var(--glass-blur)',
+        boxShadow: on ? `0 8px 30px -8px ${n.accent}, var(--glass-inner)` : 'var(--glass-inner-soft)',
+        transform: on ? 'translateY(-2px)' : 'none',
+        opacity: dim ? 0.55 : 1,
+        transition: 'all .22s ease',
+      }}
+    >
+      <div className="rv-nation-head" style={{ display: 'flex', alignItems: 'center', gap: 9, justifyContent: align === 'right' ? 'flex-end' : 'flex-start' }}>
+        <span style={{ width: 10, height: 10, borderRadius: '50%', background: n.accent, flex: 'none', boxShadow: '0 0 10px ' + n.accent }}></span>
+        <span style={{ color: 'var(--text-strong)', fontWeight: 600, fontSize: 'var(--t-h4)' }}>{n.name}</span>
+      </div>
+      <div style={{ marginTop: 6, fontSize: 'var(--t-xs)', letterSpacing: 'var(--track-eyebrow)', textTransform: 'uppercase', color: n.accent, fontWeight: 600 }}>
+        Столица · {n.capital}
+      </div>
+      <p style={{ margin: '8px 0 0', fontSize: 'var(--t-sm)', color: 'var(--text-muted)', lineHeight: 1.5 }}>{n.note}</p>
+    </div>
+  );
+}
+
+function InteractiveUKMap({ active, setActive }) {
+  const wrapRef = React.useRef(null);
+  const overlayRef = React.useRef(null);
+  const dataRef = React.useRef({ ready: false, labels: null, masks: {}, w: 0, h: 0 });
+  const [ready, setReady] = React.useState(false);
+
+  React.useEffect(() => {
+    let cancelled = false;
+    const img = new Image();
+    img.crossOrigin = 'anonymous';
+    img.onload = () => {
+      try {
+        const w = 360, h = Math.round(360 * img.naturalHeight / img.naturalWidth);
+        const c = document.createElement('canvas'); c.width = w; c.height = h;
+        const ctx = c.getContext('2d'); ctx.drawImage(img, 0, 0, w, h);
+        const data = ctx.getImageData(0, 0, w, h).data;
+        const labels = new Uint8Array(w * h);
+        const refs = NATION_ORDER.map((id) => UK_NATIONS[id].ref);
+        const TH = 115 * 115;
+        for (let i = 0; i < w * h; i++) {
+          if (data[i * 4 + 3] < 128) { labels[i] = 0; continue; }
+          const r = data[i * 4], g = data[i * 4 + 1], b = data[i * 4 + 2];
+          let best = 0, bestD = TH;
+          for (let k = 0; k < 4; k++) {
+            const dr = r - refs[k][0], dg = g - refs[k][1], db = b - refs[k][2];
+            const d = dr * dr + dg * dg + db * db;
+            if (d < bestD) { bestD = d; best = k + 1; }
+          }
+          labels[i] = best;
+        }
+        const masks = {};
+        NATION_ORDER.forEach((id, idx) => {
+          const mc = document.createElement('canvas'); mc.width = w; mc.height = h;
+          const mctx = mc.getContext('2d');
+          const out = mctx.createImageData(w, h); const md = out.data;
+          for (let i = 0; i < w * h; i++) {
+            if (labels[i] === idx + 1) {
+              md[i * 4] = data[i * 4]; md[i * 4 + 1] = data[i * 4 + 1];
+              md[i * 4 + 2] = data[i * 4 + 2]; md[i * 4 + 3] = 255;
+            }
+          }
+          mctx.putImageData(out, 0, 0);
+          masks[id] = mc;
+        });
+        if (cancelled) return;
+        dataRef.current = { ready: true, labels, masks, w, h };
+        setReady(true);
+      } catch (e) {
+        dataRef.current.ready = false;
+        setReady(true);
+      }
+    };
+    img.src = "assets/photos/ukmap.png";
+    return () => { cancelled = true; };
+  }, []);
+
+  React.useEffect(() => {
+    const d = dataRef.current; const cv = overlayRef.current;
+    if (!cv || !d.ready) return;
+    if (cv.width !== d.w) { cv.width = d.w; cv.height = d.h; }
+    const ctx = cv.getContext('2d');
+    ctx.clearRect(0, 0, d.w, d.h);
+    if (active && d.masks[active]) ctx.drawImage(d.masks[active], 0, 0);
+  }, [active, ready]);
+
+  const onMove = (e) => {
+    const d = dataRef.current; if (!d.ready || !wrapRef.current) return;
+    const rect = wrapRef.current.getBoundingClientRect();
+    const fx = (e.clientX - rect.left) / rect.width, fy = (e.clientY - rect.top) / rect.height;
+    if (fx < 0 || fx > 1 || fy < 0 || fy > 1) { setActive(null); return; }
+    const px = Math.min(d.w - 1, Math.floor(fx * d.w)), py = Math.min(d.h - 1, Math.floor(fy * d.h));
+    const L = d.labels[py * d.w + px];
+    setActive(L ? NATION_ORDER[L - 1] : null);
+  };
+
+  return (
+    <div
+      ref={wrapRef}
+      onMouseMove={onMove}
+      onMouseLeave={() => setActive(null)}
+      style={{ position: 'relative', width: '100%', maxWidth: 300, margin: '0 auto' }}
+    >
+      <div style={{ position: 'absolute', inset: '8% 12%', borderRadius: '50%', background: 'var(--grad-royal)', filter: 'blur(70px)', opacity: 0.3, zIndex: 0 }}></div>
+      <img
+        src="assets/photos/ukmap.png"
+        alt="Карта Великобритании — четыре части"
+        style={{
+          position: 'relative', zIndex: 1, display: 'block', width: '100%', height: 'auto',
+          filter: active
+            ? 'drop-shadow(0 16px 40px rgba(0,0,0,0.55)) brightness(0.45) saturate(0.8)'
+            : 'drop-shadow(0 16px 40px rgba(0,0,0,0.55))',
+          transition: 'filter .25s ease',
+        }}
+      />
+      <canvas
+        ref={overlayRef}
+        style={{
+          position: 'absolute', inset: 0, zIndex: 2, width: '100%', height: '100%', pointerEvents: 'none',
+          filter: active ? `drop-shadow(0 0 16px ${UK_NATIONS[active].accent})` : 'none',
+          transition: 'filter .2s ease',
+        }}
+      ></canvas>
+    </div>
+  );
+}
 
 function UKMap() {
-  const [hovered, setHovered] = React.useState(null);
+  const [active, setActive] = React.useState(null);
   return (
     <section id="map" style={{ paddingBlock: 'var(--section-gap)' }}>
       <div className="rv-container">
-        <div style={{ textAlign: 'center', maxWidth: 680, margin: '0 auto 44px' }}>
-          <span className="rv-eyebrow">Великобритания</span>
-          <h2 style={{ fontSize: 'var(--t-h1)', marginTop: 14 }}>Одна виза — вся страна</h2>
+        <div style={{ textAlign: 'center', maxWidth: 680, margin: '0 auto 12px' }}>
+          <span className="rv-eyebrow">Виза UK</span>
+          <h2 style={{ fontSize: 'var(--t-h1)', marginTop: 14 }}>Одна виза&nbsp;— четыре разных мира</h2>
           <p style={{ marginTop: 16, fontSize: 'var(--t-lg)', color: 'var(--text-body)' }}>
-            Британская виза открывает доступ ко всем четырём нациям — Англии, Шотландии, Уэльсу и Северной Ирландии.
+            Мало кто знает: одна британская виза открывает все четыре части Королевства.
+            Англия, Шотландия, Уэльс и Северная Ирландия&nbsp;— без отдельных разрешений.
           </p>
         </div>
-        <div style={{ maxWidth: 700, margin: '0 auto' }}>
-          <div style={{ padding: 12, borderRadius: 'var(--r-2xl)', background: 'var(--glass-fill)', border: '1px solid var(--glass-edge)', backdropFilter: 'var(--glass-blur)', WebkitBackdropFilter: 'var(--glass-blur)', boxShadow: 'var(--elev-2), var(--glass-inner)' }}>
-            <img src="assets/photos/ukmap.png" alt="Карта Великобритании" style={{ display: 'block', width: '100%', height: 'auto', borderRadius: 20 }} />
+
+        <div className="rv-map-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1.05fr 1fr', gap: 28, alignItems: 'center', marginTop: 36 }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+            <NationInfo id="scotland" active={active} onHover={setActive} align="right" />
+            <NationInfo id="ni" active={active} onHover={setActive} align="right" />
           </div>
-          <div style={{ marginTop: 24, display: 'flex', flexWrap: 'wrap', gap: 12, justifyContent: 'center' }}>
-            {Object.entries(UK_NATIONS).map(([key, nation]) => {
-              const on = hovered === key;
-              return (
-                <div key={key} onMouseEnter={() => setHovered(key)} onMouseLeave={() => setHovered(null)} style={{
-                  padding: '14px 20px', borderRadius: 'var(--r-lg)', cursor: 'default', minWidth: 160,
-                  background: on ? 'var(--glass-fill-strong)' : 'var(--glass-fill)',
-                  border: `1px solid ${on ? 'rgba(182,166,214,0.5)' : 'var(--glass-edge)'}`,
-                  backdropFilter: 'var(--glass-blur)', WebkitBackdropFilter: 'var(--glass-blur)',
-                  boxShadow: on ? 'var(--glow-violet), var(--glass-inner)' : 'var(--glass-inner-soft)',
-                  transform: on ? 'translateY(-2px)' : 'none',
-                  transition: 'all .18s ease',
-                }}>
-                  <div style={{ fontWeight: 600, color: on ? 'var(--text-strong)' : 'var(--text-body)', fontSize: 'var(--t-body)' }}>{nation.name}</div>
-                  <div style={{ fontSize: 'var(--t-sm)', color: 'var(--text-muted)', marginTop: 4 }}>{nation.cities.join(', ')}</div>
-                </div>
-              );
-            })}
+
+          <InteractiveUKMap active={active} setActive={setActive} />
+
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+            <NationInfo id="england" active={active} onHover={setActive} align="left" />
+            <NationInfo id="wales" active={active} onHover={setActive} align="left" />
           </div>
         </div>
       </div>
