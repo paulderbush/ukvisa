@@ -726,7 +726,7 @@ function Hero() {
               <Badge tone="accent" dot>Виза в Великобританию · с 2022 года</Badge>
             </div>
             <h1 style={{ fontSize: 'var(--t-display)', letterSpacing: 'var(--track-tight)', lineHeight: 1.02 }}>
-              Виза в UK —<br />
+              Виза в UK<br />
               <span style={{ background: 'var(--grad-royal)', WebkitBackgroundClip: 'text', backgroundClip: 'text', color: 'transparent' }}>с гарантией качества</span>
             </h1>
             <p className="rv-hero-lead" style={{ marginTop: 22, fontSize: 'var(--t-lg)', color: 'var(--text-body)', maxWidth: 520, lineHeight: 'var(--lh-relaxed)' }}>
@@ -1158,7 +1158,7 @@ function Hero() {
               <Badge tone="accent" dot>Шенгенские визы · с 2022 года</Badge>
             </div>
             <h1 style={{ fontSize: 'var(--t-display)', letterSpacing: 'var(--track-tight)', lineHeight: 1.02 }}>
-              Шенген в 2026 —<br />
+              Шенген в 2026<br />
               <span style={{ background: 'var(--grad-royal)', WebkitBackgroundClip: 'text', backgroundClip: 'text', color: 'transparent' }}>это реально</span>
             </h1>
             <p className="rv-hero-lead" style={{ marginTop: 22, fontSize: 'var(--t-lg)', color: 'var(--text-body)', maxWidth: 520, lineHeight: 'var(--lh-relaxed)' }}>
