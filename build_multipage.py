@@ -1554,6 +1554,793 @@ ReactDOM.createRoot(document.getElementById('root')).render(<LandingApp />);
 setTimeout(() => window.lucide && window.lucide.createIcons(), 80);
 """
 
+# ─── form page ───────────────────────────────────────────────────────────────
+
+FORM_JS = r"""
+const EU_SCHENGEN_COUNTRIES = [
+  'Австрия','Бельгия','Болгария','Венгрия','Германия','Греция','Дания',
+  'Испания','Италия','Кипр','Латвия','Литва','Люксембург','Мальта','Нидерланды',
+  'Норвегия','Польша','Португалия','Румыния','Словакия','Словения','Финляндия',
+  'Франция','Хорватия','Чехия','Швейцария','Швеция','Эстония','Исландия',
+  'Лихтенштейн','Ирландия',
+];
+const SPECIAL_TRIP_COUNTRIES = ['США','Канада','Австралия','Новая Зеландия'];
+const PRIORITY_COUNTRIES_LIST = [...EU_SCHENGEN_COUNTRIES, ...SPECIAL_TRIP_COUNTRIES].sort((a,b)=>a.localeCompare(b,'ru'));
+
+const ALL_COUNTRIES_LIST = [
+  'Австралия','Австрия','Азербайджан','Албания','Алжир','Ангола','Аргентина','Армения',
+  'Афганистан','Бангладеш','Бахрейн','Беларусь','Бельгия','Болгария','Боливия',
+  'Бразилия','Великобритания','Венгрия','Венесуэла','Вьетнам','Гана','Германия',
+  'Греция','Грузия','Дания','Египет','Израиль','Индия','Индонезия','Ирак','Иран',
+  'Ирландия','Исландия','Испания','Италия','Иордания','Йемен','Казахстан',
+  'Камбоджа','Канада','Катар','Кения','Китай','Кипр','Колумбия','Куба','Кувейт',
+  'Кыргызстан','Латвия','Ливан','Лихтенштейн','Литва','Люксембург','Малайзия',
+  'Мальта','Марокко','Мексика','Молдова','Монголия','Нидерланды','Нигерия',
+  'Новая Зеландия','Норвегия','ОАЭ','Оман','Пакистан','Перу','Польша','Португалия',
+  'Румыния','Саудовская Аравия','Сербия','Сингапур','Словакия','Словения','США',
+  'Таджикистан','Таиланд','Тунис','Турция','Туркменистан','Узбекистан','Украина',
+  'Финляндия','Франция','Хорватия','Чехия','Чили','Швейцария','Швеция','Эстония',
+  'Эфиопия','ЮАР','Южная Корея','Япония',
+].sort((a,b)=>a.localeCompare(b,'ru'));
+
+const INPUT_S = {
+  width:'100%', boxSizing:'border-box',
+  padding:'12px 16px', fontSize:16, lineHeight:1.4,
+  borderRadius:'var(--r-md)',
+  border:'1.5px solid var(--glass-edge)',
+  background:'var(--surface-2)',
+  color:'var(--text-strong)',
+  outline:'none', fontFamily:'inherit',
+  transition:'border-color 0.15s',
+  WebkitAppearance:'none',
+};
+const LABEL_S = {
+  display:'block', marginBottom:6,
+  fontSize:14, fontWeight:500,
+  color:'var(--text-muted)',
+};
+
+function Field({ label, required, hint, children }) {
+  return (
+    <div style={{ marginBottom:20 }}>
+      {label && (
+        <label style={LABEL_S}>
+          {label}
+          {required && <span style={{color:'#e05252',marginLeft:3}}>*</span>}
+        </label>
+      )}
+      {children}
+      {hint && <p style={{margin:'4px 0 0',fontSize:13,color:'var(--text-faint)'}}>{hint}</p>}
+    </div>
+  );
+}
+
+function TextInput({ value, onChange, placeholder, required, type='text' }) {
+  return (
+    <input type={type} value={value}
+      onChange={e=>onChange(e.target.value)}
+      placeholder={placeholder} required={required}
+      style={INPUT_S}
+      onFocus={e=>e.target.style.borderColor='var(--accent-mauve)'}
+      onBlur={e=>e.target.style.borderColor='var(--glass-edge)'}
+    />
+  );
+}
+
+function TextArea({ value, onChange, placeholder, required, rows=3 }) {
+  return (
+    <textarea value={value}
+      onChange={e=>onChange(e.target.value)}
+      placeholder={placeholder} required={required} rows={rows}
+      style={{...INPUT_S, resize:'vertical'}}
+      onFocus={e=>e.target.style.borderColor='var(--accent-mauve)'}
+      onBlur={e=>e.target.style.borderColor='var(--glass-edge)'}
+    />
+  );
+}
+
+function DatePicker({ value, onChange, required }) {
+  return (
+    <input type="date" value={value}
+      onChange={e=>onChange(e.target.value)}
+      required={required}
+      style={INPUT_S}
+      onFocus={e=>e.target.style.borderColor='var(--accent-mauve)'}
+      onBlur={e=>e.target.style.borderColor='var(--glass-edge)'}
+    />
+  );
+}
+
+function SelectInput({ value, onChange, options, placeholder, required }) {
+  return (
+    <select value={value}
+      onChange={e=>onChange(e.target.value)}
+      required={required}
+      style={INPUT_S}
+      onFocus={e=>e.target.style.borderColor='var(--accent-mauve)'}
+      onBlur={e=>e.target.style.borderColor='var(--glass-edge)'}
+    >
+      <option value="">{placeholder||'-- выберите --'}</option>
+      {options.map(o=>typeof o==='string'
+        ? <option key={o} value={o}>{o}</option>
+        : <option key={o.value} value={o.value}>{o.label}</option>
+      )}
+    </select>
+  );
+}
+
+function CountrySearch({ value, onChange, countries, id, placeholder }) {
+  return (
+    <div>
+      <input list={id} value={value}
+        onChange={e=>onChange(e.target.value)}
+        placeholder={placeholder||'Начните вводить название страны...'}
+        style={INPUT_S}
+        onFocus={e=>e.target.style.borderColor='var(--accent-mauve)'}
+        onBlur={e=>e.target.style.borderColor='var(--glass-edge)'}
+        autoComplete="off"
+      />
+      <datalist id={id}>
+        {countries.map(c=><option key={c} value={c}/>)}
+      </datalist>
+    </div>
+  );
+}
+
+function YesNo({ value, onChange }) {
+  const btn = (v, label) => (
+    <button key={v} type="button" onClick={()=>onChange(v)} style={{
+      padding:'10px 32px',
+      borderRadius:'var(--r-pill)',
+      border:`1.5px solid ${value===v?'var(--accent-mauve)':'var(--glass-edge)'}`,
+      background: value===v?'var(--accent-mauve)':'transparent',
+      color: value===v?'#fff':'var(--text-body)',
+      fontSize:16, fontWeight:500,
+      cursor:'pointer', transition:'all 0.15s', fontFamily:'inherit',
+    }}>{label}</button>
+  );
+  return (
+    <div style={{display:'flex',gap:10,flexWrap:'wrap'}}>
+      {btn('yes','Да')}
+      {btn('no','Нет')}
+    </div>
+  );
+}
+
+function FormSection({ num, title, subtitle, children }) {
+  return (
+    <section style={{
+      background:'var(--glass-fill-solid)',
+      border:'1px solid var(--glass-edge)',
+      borderRadius:'var(--r-xl)',
+      padding:'28px 24px',
+      marginBottom:20,
+    }}>
+      <div style={{
+        display:'flex', alignItems:'flex-start', gap:14,
+        marginBottom:24, paddingBottom:16,
+        borderBottom:'1px solid var(--glass-edge-faint)',
+      }}>
+        <div style={{
+          width:32, height:32, borderRadius:'var(--r-md)',
+          background:'var(--grad-royal)', color:'#fff',
+          display:'flex', alignItems:'center', justifyContent:'center',
+          fontSize:13, fontWeight:700, flexShrink:0,
+        }}>{num}</div>
+        <div>
+          <h2 style={{margin:0, fontSize:18, fontWeight:600, color:'var(--text-strong)'}}>{title}</h2>
+          {subtitle && <p style={{margin:'3px 0 0', fontSize:13, color:'var(--text-muted)'}}>{subtitle}</p>}
+        </div>
+      </div>
+      {children}
+    </section>
+  );
+}
+
+function Row2({ children }) {
+  return (
+    <div style={{display:'grid', gridTemplateColumns:'repeat(auto-fit, minmax(220px, 1fr))', gap:'0 20px'}}>
+      {children}
+    </div>
+  );
+}
+
+function Row3({ children }) {
+  return (
+    <div style={{display:'grid', gridTemplateColumns:'repeat(auto-fit, minmax(180px, 1fr))', gap:'0 16px'}}>
+      {children}
+    </div>
+  );
+}
+
+function AddBtn({ onClick, label }) {
+  return (
+    <button type="button" onClick={onClick} style={{
+      display:'flex', alignItems:'center', gap:8,
+      padding:'8px 16px', borderRadius:'var(--r-md)',
+      border:'1px dashed var(--glass-edge)', background:'transparent',
+      color:'var(--text-muted)', fontSize:14, cursor:'pointer', fontFamily:'inherit',
+    }}>
+      <i data-lucide="plus" style={{width:16,height:16}}></i>
+      {label}
+    </button>
+  );
+}
+
+function TripEntry({ trip, onChange, onDelete, canDelete, countries, idPrefix }) {
+  return (
+    <div style={{
+      display:'flex', flexWrap:'wrap', gap:12, alignItems:'flex-start',
+      padding:'14px 16px', borderRadius:'var(--r-md)',
+      background:'rgba(255,255,255,0.03)',
+      border:'1px solid var(--glass-edge-faint)',
+      marginBottom:10,
+    }}>
+      <div style={{flex:'2 1 180px', minWidth:160}}>
+        <label style={{...LABEL_S, fontSize:12}}>Страна</label>
+        <CountrySearch
+          id={`${idPrefix}-country`}
+          value={trip.country}
+          onChange={v=>onChange({...trip, country:v})}
+          countries={countries}
+          placeholder="Страна"
+        />
+      </div>
+      <div style={{flex:'1 1 140px', minWidth:130}}>
+        <label style={{...LABEL_S, fontSize:12}}>Дата въезда</label>
+        <DatePicker value={trip.from} onChange={v=>onChange({...trip, from:v})} />
+      </div>
+      <div style={{flex:'1 1 140px', minWidth:130}}>
+        <label style={{...LABEL_S, fontSize:12}}>Дата выезда</label>
+        <DatePicker value={trip.to} onChange={v=>onChange({...trip, to:v})} />
+      </div>
+      {canDelete && (
+        <div style={{flex:'0 0 auto', paddingTop:22}}>
+          <button type="button" onClick={onDelete} style={{
+            width:36, height:44, borderRadius:'var(--r-md)',
+            border:'1px solid var(--glass-edge)', background:'transparent',
+            cursor:'pointer', color:'var(--text-muted)',
+            display:'flex', alignItems:'center', justifyContent:'center',
+          }}>
+            <i data-lucide="trash-2" style={{width:16,height:16}}></i>
+          </button>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function TravelHistorySection({ data, onChange }) {
+  const upd = (key, val) => onChange({...data, [key]:val});
+  const addTrip = key => () => upd(key, [...data[key], {country:'', from:'', to:''}]);
+  const removeTrip = (key, idx) => () => upd(key, data[key].filter((_,i)=>i!==idx));
+  const updateTrip = (key, idx) => trip => { const a=[...data[key]]; a[idx]=trip; upd(key,a); };
+
+  return (
+    <FormSection num="8" title="История поездок" subtitle="Путешествия за последние 10 лет">
+
+      <Field label="Бывали ли вы в Великобритании ранее?" required>
+        <YesNo value={data.wasInUKBefore} onChange={v=>upd('wasInUKBefore',v)} />
+      </Field>
+
+      {data.wasInUKBefore==='yes' && (
+        <div style={{marginBottom:20}}>
+          <p style={{fontSize:14, color:'var(--text-muted)', marginBottom:10}}>Укажите поездки в UK:</p>
+          {data.ukVisits.map((t,i)=>(
+            <TripEntry key={i} trip={t}
+              onChange={updateTrip('ukVisits',i)}
+              onDelete={removeTrip('ukVisits',i)}
+              canDelete={data.ukVisits.length>1}
+              countries={['Великобритания']}
+              idPrefix={`uk-${i}`}
+            />
+          ))}
+          <AddBtn onClick={addTrip('ukVisits')} label="Добавить поездку в UK" />
+        </div>
+      )}
+
+      <div style={{height:1, background:'var(--glass-edge-faint)', margin:'4px 0 20px'}}/>
+
+      <Field label="Были ли поездки за рубеж за последние 10 лет?" required>
+        <YesNo value={data.hadAnyTrips} onChange={v=>upd('hadAnyTrips',v)} />
+      </Field>
+
+      {data.hadAnyTrips==='yes' && (<>
+
+        <Field
+          label="Были ли поездки в США, Канаду, Австралию, Новую Зеландию или страны ЕС/Шенген?"
+          hint="Если да - укажите до 2 поездок. Лучше выбрать из разных категорий: например, 1 страна Шенгена и 1 из США/Австралии/Канады/Новой Зеландии."
+        >
+          <YesNo value={data.hadPriorityTrips} onChange={v=>upd('hadPriorityTrips',v)} />
+        </Field>
+
+        {data.hadPriorityTrips==='yes' && (
+          <div style={{marginBottom:20}}>
+            {data.priorityTrips.map((t,i)=>(
+              <TripEntry key={i} trip={t}
+                onChange={updateTrip('priorityTrips',i)}
+                onDelete={removeTrip('priorityTrips',i)}
+                canDelete={data.priorityTrips.length>1}
+                countries={PRIORITY_COUNTRIES_LIST}
+                idPrefix={`pri-${i}`}
+              />
+            ))}
+            {data.priorityTrips.length<2 && (
+              <AddBtn onClick={addTrip('priorityTrips')} label="Добавить ещё поездку (макс. 2)" />
+            )}
+          </div>
+        )}
+
+        <Field
+          label="Были ли поездки в другие страны (кроме указанных выше)?"
+          hint="Укажите все поездки за последние 10 лет в любые другие страны."
+        >
+          <YesNo value={data.hadOtherTrips} onChange={v=>upd('hadOtherTrips',v)} />
+        </Field>
+
+        {data.hadOtherTrips==='yes' && (
+          <div style={{marginBottom:20}}>
+            {data.otherTrips.map((t,i)=>(
+              <TripEntry key={i} trip={t}
+                onChange={updateTrip('otherTrips',i)}
+                onDelete={removeTrip('otherTrips',i)}
+                canDelete={data.otherTrips.length>1}
+                countries={ALL_COUNTRIES_LIST}
+                idPrefix={`oth-${i}`}
+              />
+            ))}
+            <AddBtn onClick={addTrip('otherTrips')} label="Были ещё поездки? Добавить" />
+          </div>
+        )}
+
+      </>)}
+    </FormSection>
+  );
+}
+
+const GENDER_OPTIONS = [
+  {value:'male',label:'Мужской'},{value:'female',label:'Женский'},
+];
+const MARITAL_OPTIONS = [
+  'Не состою в браке','Состою в браке','Разведён / Разведена',
+  'Вдовец / Вдова','Гражданский брак',
+];
+const HOUSING_OPTIONS = [
+  'Собственное жильё','Аренда','Живу с родителями / родственниками','Служебное жильё',
+];
+const EMPLOYMENT_OPTIONS = [
+  'Работаю по найму (полная занятость)','Работаю по найму (частичная занятость)',
+  'Самозанятый / ИП','Владелец бизнеса','Государственный служащий',
+  'Пенсионер','Студент','В отпуске по уходу за ребёнком','Временно не работаю',
+];
+const VISIT_PURPOSE_OPTIONS = [
+  'Туризм / отдых','Деловая поездка','Посещение друзей или родственников',
+  'Медицинское лечение','Участие в конференции / семинаре',
+  'Учёба (краткосрочная)','Транзит','Другое',
+];
+
+const INITIAL_STATE = {
+  firstName:'', lastName:'', otherNames:'', dob:'',
+  birthCity:'', birthCountry:'', nationality:'', gender:'', maritalStatus:'',
+  passportNo:'', passportIssuer:'', passportIssueDate:'', passportExpiry:'',
+  otherPassportCountries:'', rfPassportNo:'', rfPassportIssuer:'',
+  address:'', yearsAtAddress:'', housingStatus:'', phone:'', email:'',
+  employmentStatus:'', employerName:'', employerAddress:'', employerPhone:'',
+  jobTitle:'', jobDescription:'', startDate:'', monthlyIncome:'',
+  otherIncome:'', savings:'', monthlyExpenses:'',
+  visitPurpose:'', arrivalDate:'', departureDate:'', tripDescription:'',
+  ukExpenses:'', whoPaysTripExpenses:'',
+  ukAccommodation:'', hostName:'', ukAddress:'', hostPhone:'', hostEmail:'',
+  hasUKRelatives:null, relativeName:'', relativeRelation:'',
+  relativeCitizenship:'', relativeUKStatus:'', relativePassport:'',
+  travelHistory:{
+    wasInUKBefore:null,
+    ukVisits:[{country:'Великобритания', from:'', to:''}],
+    hadAnyTrips:null,
+    hadPriorityTrips:null,
+    priorityTrips:[{country:'', from:'', to:''}],
+    hadOtherTrips:null,
+    otherTrips:[{country:'', from:'', to:''}],
+  },
+  motherName:'', motherDob:'', motherNationality:'',
+  fatherName:'', fatherDob:'', fatherNationality:'',
+  hasDependents:null, dependentsInfo:'',
+  wasRefused:null, wasDeported:null, violatedVisa:null, hasCriminalRecord:null,
+  violationsDetails:'',
+  additionalInfo:'',
+};
+
+function FormApp() {
+  const [form, setForm] = React.useState(INITIAL_STATE);
+  const [submitted, setSubmitted] = React.useState(false);
+  const [menuOpen, setMenuOpen] = React.useState(false);
+
+  React.useEffect(()=>{ if(window.lucide) window.lucide.createIcons(); });
+  React.useEffect(()=>{ document.body.style.overflow = menuOpen?'hidden':''; },[menuOpen]);
+
+  const upd = key => val => setForm(f=>({...f,[key]:val}));
+  const updTH = val => setForm(f=>({...f,travelHistory:val}));
+
+  const handleSubmit = e => {
+    e.preventDefault();
+    console.log('Form submitted:', JSON.stringify(form, null, 2));
+    setSubmitted(true);
+    window.scrollTo({top:0, behavior:'smooth'});
+  };
+
+  if (submitted) {
+    return (
+      <React.Fragment>
+        <Header onOpenMenu={()=>setMenuOpen(true)} onOpenConsult={()=>{}} />
+        <MobileMenu open={menuOpen} onClose={()=>setMenuOpen(false)} onOpenConsult={()=>setMenuOpen(false)} />
+        <div style={{minHeight:'80vh', display:'flex', alignItems:'center', justifyContent:'center', paddingTop:100, paddingBottom:60}}>
+          <div className="rv-container" style={{maxWidth:500, textAlign:'center'}}>
+            <div style={{
+              width:72, height:72, borderRadius:'50%', background:'var(--grad-royal)',
+              display:'flex', alignItems:'center', justifyContent:'center', margin:'0 auto 24px',
+            }}>
+              <i data-lucide="check" style={{width:36,height:36,color:'#fff'}}></i>
+            </div>
+            <h1 style={{fontSize:28, fontWeight:700, color:'var(--text-strong)', marginBottom:12}}>
+              Анкета отправлена!
+            </h1>
+            <p style={{fontSize:17, color:'var(--text-muted)', lineHeight:1.6, marginBottom:32}}>
+              Мы получили ваши данные и свяжемся с вами в ближайшее время.
+            </p>
+            <a href="uk.html" style={{
+              display:'inline-block', padding:'14px 32px', borderRadius:'var(--r-pill)',
+              background:'var(--grad-royal)', color:'#fff', fontWeight:600, fontSize:16, textDecoration:'none',
+            }}>Вернуться на сайт</a>
+          </div>
+        </div>
+        <Footer />
+      </React.Fragment>
+    );
+  }
+
+  return (
+    <React.Fragment>
+      <Header onOpenMenu={()=>setMenuOpen(true)} onOpenConsult={()=>{}} />
+      <MobileMenu open={menuOpen} onClose={()=>setMenuOpen(false)} onOpenConsult={()=>setMenuOpen(false)} />
+
+      <main style={{paddingTop:100, paddingBottom:60}}>
+        <div className="rv-container" style={{maxWidth:760}}>
+
+          <div style={{marginBottom:32}}>
+            <h1 style={{fontSize:32, fontWeight:700, letterSpacing:'-0.02em', color:'var(--text-strong)', marginBottom:8}}>
+              Анкета для визы в Великобританию
+            </h1>
+            <p style={{fontSize:16, color:'var(--text-muted)', lineHeight:1.6}}>
+              Заполните все поля — данные используются для подготовки заявления.
+              Поля со звёздочкой <span style={{color:'#e05252'}}>*</span> обязательны.
+            </p>
+          </div>
+
+          <form onSubmit={handleSubmit}>
+
+            {/* 1. Personal */}
+            <FormSection num="1" title="Личные данные">
+              <Row2>
+                <Field label="Имя (Given names)" required hint="Латиницей, как в паспорте">
+                  <TextInput value={form.firstName} onChange={upd('firstName')} placeholder="Например: IVAN" required />
+                </Field>
+                <Field label="Фамилия (Family name)" required hint="Латиницей, как в паспорте">
+                  <TextInput value={form.lastName} onChange={upd('lastName')} placeholder="Например: IVANOV" required />
+                </Field>
+              </Row2>
+              <Field label="Другие имена / девичья фамилия" hint="Если когда-либо использовали другое имя">
+                <TextInput value={form.otherNames} onChange={upd('otherNames')} placeholder="Если нет - оставьте пустым" />
+              </Field>
+              <Row3>
+                <Field label="Дата рождения" required>
+                  <DatePicker value={form.dob} onChange={upd('dob')} required />
+                </Field>
+                <Field label="Место рождения" required hint="Город, регион">
+                  <TextInput value={form.birthCity} onChange={upd('birthCity')} placeholder="Москва" required />
+                </Field>
+                <Field label="Страна рождения" required hint="Например: USSR, Russia">
+                  <TextInput value={form.birthCountry} onChange={upd('birthCountry')} placeholder="Russia" required />
+                </Field>
+              </Row3>
+              <Row3>
+                <Field label="Гражданство" required>
+                  <TextInput value={form.nationality} onChange={upd('nationality')} placeholder="Russian" required />
+                </Field>
+                <Field label="Пол" required>
+                  <SelectInput value={form.gender} onChange={upd('gender')} options={GENDER_OPTIONS} placeholder="-- выберите --" required />
+                </Field>
+                <Field label="Семейное положение" required>
+                  <SelectInput value={form.maritalStatus} onChange={upd('maritalStatus')} options={MARITAL_OPTIONS} placeholder="-- выберите --" required />
+                </Field>
+              </Row3>
+            </FormSection>
+
+            {/* 2. Passport */}
+            <FormSection num="2" title="Паспорт и документы">
+              <Row2>
+                <Field label="Номер загранпаспорта" required>
+                  <TextInput value={form.passportNo} onChange={upd('passportNo')} placeholder="782XXXXXXX" required />
+                </Field>
+                <Field label="Орган выдачи загранпаспорта" required hint="Например: УФМС России по ... области">
+                  <TextInput value={form.passportIssuer} onChange={upd('passportIssuer')} placeholder="УФМС России по ..." required />
+                </Field>
+              </Row2>
+              <Row2>
+                <Field label="Дата выдачи загранпаспорта" required>
+                  <DatePicker value={form.passportIssueDate} onChange={upd('passportIssueDate')} required />
+                </Field>
+                <Field label="Срок действия загранпаспорта" required>
+                  <DatePicker value={form.passportExpiry} onChange={upd('passportExpiry')} required />
+                </Field>
+              </Row2>
+              <Field label="Есть другое гражданство / паспорт?" hint="Если есть - укажите страны; если нет - оставьте пустым">
+                <TextInput value={form.otherPassportCountries} onChange={upd('otherPassportCountries')} placeholder="Нет или укажите страны" />
+              </Field>
+              <Row2>
+                <Field label="Серия и номер внутреннего паспорта РФ">
+                  <TextInput value={form.rfPassportNo} onChange={upd('rfPassportNo')} placeholder="ХХХХ ХХХXХХ" />
+                </Field>
+                <Field label="Кем и когда выдан внутренний паспорт" hint="Подразделение, дата">
+                  <TextInput value={form.rfPassportIssuer} onChange={upd('rfPassportIssuer')} placeholder="Отдел МВД ..." />
+                </Field>
+              </Row2>
+            </FormSection>
+
+            {/* 3. Contact */}
+            <FormSection num="3" title="Контактные данные и адрес">
+              <Field label="Адрес регистрации" required hint="Улица, дом/кв., город, регион, индекс, страна">
+                <TextArea value={form.address} onChange={upd('address')} placeholder="ул. Пушкина, д.1, кв.1, Москва, 101000, Россия" required rows={2} />
+              </Field>
+              <Row2>
+                <Field label="Сколько лет живёте по этому адресу?" required>
+                  <TextInput value={form.yearsAtAddress} onChange={upd('yearsAtAddress')} placeholder="Например: 3 года 5 месяцев" required />
+                </Field>
+                <Field label="Статус жилья" required>
+                  <SelectInput value={form.housingStatus} onChange={upd('housingStatus')} options={HOUSING_OPTIONS} placeholder="-- выберите --" required />
+                </Field>
+              </Row2>
+              <Row2>
+                <Field label="Мобильный телефон" required>
+                  <TextInput value={form.phone} onChange={upd('phone')} type="tel" placeholder="+7XXXXXXXXXX" required />
+                </Field>
+                <Field label="Адрес электронной почты" required>
+                  <TextInput value={form.email} onChange={upd('email')} type="email" placeholder="example@mail.ru" required />
+                </Field>
+              </Row2>
+            </FormSection>
+
+            {/* 4. Employment */}
+            <FormSection num="4" title="Занятость и доходы">
+              <Row2>
+                <Field label="Статус занятости" required>
+                  <SelectInput value={form.employmentStatus} onChange={upd('employmentStatus')} options={EMPLOYMENT_OPTIONS} placeholder="-- выберите --" required />
+                </Field>
+                <Field label="Должность" required>
+                  <TextInput value={form.jobTitle} onChange={upd('jobTitle')} placeholder="Например: Менеджер" required />
+                </Field>
+              </Row2>
+              <Row2>
+                <Field label="Название работодателя / компании" required>
+                  <TextInput value={form.employerName} onChange={upd('employerName')} placeholder="ООО ..." required />
+                </Field>
+                <Field label="Телефон работодателя" required>
+                  <TextInput value={form.employerPhone} onChange={upd('employerPhone')} type="tel" placeholder="+7XXXXXXXXXX" required />
+                </Field>
+              </Row2>
+              <Field label="Адрес работодателя" required hint="Полный адрес">
+                <TextArea value={form.employerAddress} onChange={upd('employerAddress')} placeholder="Москва, ул. ..." required rows={2} />
+              </Field>
+              <Field label="Описание должностных обязанностей" required hint="Кратко: чем занимаетесь">
+                <TextArea value={form.jobDescription} onChange={upd('jobDescription')} placeholder="Управляю ..." required rows={2} />
+              </Field>
+              <Row3>
+                <Field label="Дата начала работы" required hint="Месяц и год">
+                  <TextInput value={form.startDate} onChange={upd('startDate')} placeholder="Март 2020" required />
+                </Field>
+                <Field label="Ежемесячный доход (после налогов)" required hint="В рублях">
+                  <TextInput value={form.monthlyIncome} onChange={upd('monthlyIncome')} placeholder="120 000 руб." required />
+                </Field>
+                <Field label="Ежемесячные расходы" required hint="В рублях">
+                  <TextInput value={form.monthlyExpenses} onChange={upd('monthlyExpenses')} placeholder="70 000 руб." required />
+                </Field>
+              </Row3>
+              <Row2>
+                <Field label="Сбережения / накопления" hint="Приблизительно в GBP">
+                  <TextInput value={form.savings} onChange={upd('savings')} placeholder="Например: 2 000 GBP" />
+                </Field>
+                <Field label="Другие источники дохода" hint="Если есть - опишите кратко">
+                  <TextInput value={form.otherIncome} onChange={upd('otherIncome')} placeholder="Аренда, дивиденды и т.д." />
+                </Field>
+              </Row2>
+            </FormSection>
+
+            {/* 5. Trip */}
+            <FormSection num="5" title="Цель и детали поездки">
+              <Row2>
+                <Field label="Основная цель визита" required>
+                  <SelectInput value={form.visitPurpose} onChange={upd('visitPurpose')} options={VISIT_PURPOSE_OPTIONS} placeholder="-- выберите --" required />
+                </Field>
+                <Field label="Кто оплачивает поездку?" required>
+                  <TextInput value={form.whoPaysTripExpenses} onChange={upd('whoPaysTripExpenses')} placeholder="Самостоятельно" required />
+                </Field>
+              </Row2>
+              <Row3>
+                <Field label="Дата въезда в UK" required>
+                  <DatePicker value={form.arrivalDate} onChange={upd('arrivalDate')} required />
+                </Field>
+                <Field label="Дата выезда из UK" required>
+                  <DatePicker value={form.departureDate} onChange={upd('departureDate')} required />
+                </Field>
+                <Field label="Личные расходы в UK" required hint="В GBP">
+                  <TextInput value={form.ukExpenses} onChange={upd('ukExpenses')} placeholder="1 500 GBP" required />
+                </Field>
+              </Row3>
+              <Field label="Описание поездки" required hint="Что планируете делать, куда сходить, куда ехать">
+                <TextArea value={form.tripDescription} onChange={upd('tripDescription')} placeholder="Планирую посетить Лондон, осмотреть достопримечательности..." required rows={3} />
+              </Field>
+            </FormSection>
+
+            {/* 6. Accommodation */}
+            <FormSection num="6" title="Проживание в Великобритании">
+              <Field label="Где будете жить в UK?" required hint="Название отеля, адрес или 'у друзей/родственников'">
+                <TextInput value={form.ukAccommodation} onChange={upd('ukAccommodation')} placeholder="Отель Marriott / у родственников" required />
+              </Field>
+              <Field label="Адрес проживания в UK" required hint="Полный адрес, включая почтовый индекс">
+                <TextArea value={form.ukAddress} onChange={upd('ukAddress')} placeholder="123 Example St, London, SW1A 1AA" required rows={2} />
+              </Field>
+              <Row2>
+                <Field label="Имя принимающего лица" hint="Если останавливаетесь у кого-то">
+                  <TextInput value={form.hostName} onChange={upd('hostName')} placeholder="Имя и фамилия" />
+                </Field>
+                <Field label="Телефон принимающего лица в UK">
+                  <TextInput value={form.hostPhone} onChange={upd('hostPhone')} type="tel" placeholder="+44 ..." />
+                </Field>
+              </Row2>
+              <Field label="Email принимающего лица">
+                <TextInput value={form.hostEmail} onChange={upd('hostEmail')} type="email" placeholder="email@example.com" />
+              </Field>
+            </FormSection>
+
+            {/* 7. UK relatives */}
+            <FormSection num="7" title="Родственники в Великобритании">
+              <Field label="Есть ли у вас родственники в UK?" required>
+                <YesNo value={form.hasUKRelatives} onChange={upd('hasUKRelatives')} />
+              </Field>
+              {form.hasUKRelatives==='yes' && (<>
+                <Row2>
+                  <Field label="Имя родственника">
+                    <TextInput value={form.relativeName} onChange={upd('relativeName')} placeholder="Имя и фамилия" />
+                  </Field>
+                  <Field label="Степень родства">
+                    <TextInput value={form.relativeRelation} onChange={upd('relativeRelation')} placeholder="дочь, сын, брат..." />
+                  </Field>
+                </Row2>
+                <Row3>
+                  <Field label="Гражданство родственника">
+                    <TextInput value={form.relativeCitizenship} onChange={upd('relativeCitizenship')} placeholder="British" />
+                  </Field>
+                  <Field label="Статус пребывания в UK">
+                    <TextInput value={form.relativeUKStatus} onChange={upd('relativeUKStatus')} placeholder="Гражданин / постоянное проживание / виза" />
+                  </Field>
+                  <Field label="Номер паспорта родственника">
+                    <TextInput value={form.relativePassport} onChange={upd('relativePassport')} placeholder="XXXXXXXX" />
+                  </Field>
+                </Row3>
+              </>)}
+            </FormSection>
+
+            {/* 8. Travel history */}
+            <TravelHistorySection data={form.travelHistory} onChange={updTH} />
+
+            {/* 9. Parents */}
+            <FormSection num="9" title="Сведения о родителях">
+              <div style={{marginBottom:20, paddingBottom:20, borderBottom:'1px solid var(--glass-edge-faint)'}}>
+                <div style={{fontSize:15, fontWeight:600, color:'var(--text-body)', marginBottom:12}}>Мать</div>
+                <Row3>
+                  <Field label="Имя матери" required hint="Имя и фамилия">
+                    <TextInput value={form.motherName} onChange={upd('motherName')} placeholder="Имя Фамилия" required />
+                  </Field>
+                  <Field label="Дата рождения матери" required>
+                    <DatePicker value={form.motherDob} onChange={upd('motherDob')} required />
+                  </Field>
+                  <Field label="Гражданство матери" required>
+                    <TextInput value={form.motherNationality} onChange={upd('motherNationality')} placeholder="Russian" required />
+                  </Field>
+                </Row3>
+              </div>
+              <div>
+                <div style={{fontSize:15, fontWeight:600, color:'var(--text-body)', marginBottom:12}}>Отец</div>
+                <Row3>
+                  <Field label="Имя отца" hint="Если известно">
+                    <TextInput value={form.fatherName} onChange={upd('fatherName')} placeholder="Имя Фамилия" />
+                  </Field>
+                  <Field label="Дата рождения отца" hint="Если известно">
+                    <DatePicker value={form.fatherDob} onChange={upd('fatherDob')} />
+                  </Field>
+                  <Field label="Гражданство отца" hint="Если известно">
+                    <TextInput value={form.fatherNationality} onChange={upd('fatherNationality')} placeholder="Russian" />
+                  </Field>
+                </Row3>
+              </div>
+            </FormSection>
+
+            {/* 10. Dependents */}
+            <FormSection num="10" title="Иждивенцы">
+              <Field label="Есть ли лица, финансово зависящие от вас?" required>
+                <YesNo value={form.hasDependents} onChange={upd('hasDependents')} />
+              </Field>
+              {form.hasDependents==='yes' && (
+                <Field label="Кто именно?" hint="Имя, возраст, степень родства">
+                  <TextArea value={form.dependentsInfo} onChange={upd('dependentsInfo')} placeholder="Иванов Пётр, 10 лет, сын" rows={3} />
+                </Field>
+              )}
+            </FormSection>
+
+            {/* 11. History */}
+            <FormSection num="11" title="История отказов и нарушений" subtitle="Отвечайте честно - сокрытие информации является основанием для отказа в визе">
+              <Field label="Отказывали в визе в любую страну?" required>
+                <YesNo value={form.wasRefused} onChange={upd('wasRefused')} />
+              </Field>
+              <Field label="Депортировали из какой-либо страны?" required>
+                <YesNo value={form.wasDeported} onChange={upd('wasDeported')} />
+              </Field>
+              <Field label="Нарушали условия визы или иммиграционный закон?" required>
+                <YesNo value={form.violatedVisa} onChange={upd('violatedVisa')} />
+              </Field>
+              <Field label="Есть судимости или административные взыскания?" required>
+                <YesNo value={form.hasCriminalRecord} onChange={upd('hasCriminalRecord')} />
+              </Field>
+              {(form.wasRefused==='yes'||form.wasDeported==='yes'||form.violatedVisa==='yes'||form.hasCriminalRecord==='yes') && (
+                <Field label="Подробности" required hint="Страна, год, обстоятельства">
+                  <TextArea value={form.violationsDetails} onChange={upd('violationsDetails')} placeholder="Укажите подробности..." rows={4} required />
+                </Field>
+              )}
+            </FormSection>
+
+            {/* 12. Additional */}
+            <FormSection num="12" title="Дополнительная информация">
+              <Field label="Любая другая информация для визового офицера" hint="Причина визита, обстоятельства или что-то важное для рассмотрения заявки">
+                <TextArea value={form.additionalInfo} onChange={upd('additionalInfo')} placeholder="Если хотите, добавьте любую дополнительную информацию..." rows={4} />
+              </Field>
+            </FormSection>
+
+            {/* Submit */}
+            <div style={{
+              background:'var(--glass-fill-solid)',
+              border:'1px solid var(--glass-edge)',
+              borderRadius:'var(--r-xl)',
+              padding:'28px 24px',
+              textAlign:'center',
+            }}>
+              <p style={{fontSize:14, color:'var(--text-muted)', marginBottom:20}}>
+                Нажимая кнопку, вы соглашаетесь на обработку персональных данных для подготовки визового заявления.
+              </p>
+              <button type="submit" style={{
+                padding:'16px 48px',
+                borderRadius:'var(--r-pill)',
+                background:'var(--grad-royal)',
+                color:'#fff', fontSize:17, fontWeight:600,
+                border:'1px solid rgba(255,255,255,0.18)',
+                boxShadow:'var(--glow-mauve), var(--glass-inner)',
+                cursor:'pointer', fontFamily:'inherit',
+              }}>
+                Отправить анкету
+              </button>
+            </div>
+
+          </form>
+        </div>
+      </main>
+
+      <Footer />
+    </React.Fragment>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<FormApp />);
+setTimeout(()=>window.lucide&&window.lucide.createIcons(), 80);
+"""
+
 # ─── build functions ──────────────────────────────────────────────────────────
 
 TITLE = 'Royal Visas - Визы в Европу и Великобританию'
@@ -1593,10 +2380,18 @@ def build_index():
         LANDING_APP_JS,
     ])
 
+def build_form():
+    write_page('form.html', 'Анкета для визы UK - Royal Visas', [
+        HEADER_JS,
+        FOOTER_JS,
+        FORM_JS,
+    ])
+
 if __name__ == '__main__':
     build_uk()
     build_schengen()
     build_index()
+    build_form()
     print('\nAll done!')
     print('\nPromo codes (30 one-time, -5 000 руб.):')
     for c in PROMO_CODES:
