@@ -1057,7 +1057,7 @@ function Services() {
   const tariff = {
     name: 'Всё включено',
     tagline: 'Берём весь процесс на себя - от анкеты до подачи.',
-    price: '29 990',
+    price: '34 990',
     features: [
       'Заполняем анкету за вас',
       'Готовим полный пакет документов',
@@ -1373,7 +1373,7 @@ function Services() {
   const tariff = {
     name: 'Всё включено',
     tagline: 'Берём весь процесс на себя - от анкеты до подачи.',
-    price: '29 990',
+    price: '34 990',
     features: ['Заполняем анкету за вас', 'Готовим полный пакет документов', 'Подбираем оптимальное консульство для подачи'],
   };
   return (
@@ -1938,7 +1938,8 @@ const INITIAL_STATE = {
   firstName:'', lastName:'', otherNames:'', dob:'',
   birthCity:'', birthCountry:'', nationality:'', gender:'', maritalStatus:'',
   passportNo:'', passportIssuer:'', passportIssueDate:'', passportExpiry:'',
-  rfPassportNo:'', rfPassportIssuer:'',
+  rfPassportNo:'', rfPassportIssuer:'', rfPassportIssueDate:'',
+  changedName:null, previousFullName:'',
   hasOtherCitizenship:null, otherCitizenships:[''],
   regAddress:'', regAddressDate:'', housingStatus:'',
   actualAddressSame:null, actualAddress:'', actualAddressDate:'', actualHousingStatus:'',
@@ -1947,14 +1948,15 @@ const INITIAL_STATE = {
   jobTitle:'', jobDescription:'', startDate:'',
   employerLegalAddress:'', employerActualSame:null, employerActualAddress:'',
   monthlyIncome:'', monthlyExpenses:'', savings:'',
-  otherIncomeType:'', otherIncomeAmount:'',
+  otherIncomeType:'', otherIncomeAmount:'', otherIncomeDesc:'',
   visitPurpose:'', arrivalDate:'', departureDate:'', tripDescription:'',
   ukExpenses:'',
   whoPaysTripExpenses:'', sponsorName:'', sponsorPhone:'', sponsorEmail:'', sponsorWho:'',
-  ukStayType:'', hotelName:'', ukAddress:'',
-  hostName:'', hostPhone:'', hostEmail:'',
   hasUKRelatives:null, relativeName:'', relativeRelation:'',
   relativeCitizenship:'', relativeUKStatus:'', relativePassport:'',
+  ukStayType:'', hotelName:'', ukAddress:'',
+  stayWithListedRelative:null, otherHostInfo:'',
+  hostName:'', hostPhone:'', hostEmail:'',
   travelHistory:{
     wasInUKBefore:null,
     ukVisits:[{country:'Великобритания', from:'', to:''}],
@@ -2048,9 +2050,14 @@ function FormApp() {
                   <TextInput value={form.lastName} onChange={upd('lastName')} />
                 </Field>
               </Row2>
-              <Field label="Другие имена / девичья фамилия">
-                <TextInput value={form.otherNames} onChange={upd('otherNames')} />
+              <Field label="Меняли ли вы имя или фамилию?">
+                <YesNo value={form.changedName} onChange={upd('changedName')} />
               </Field>
+              {form.changedName==='yes' && (
+                <Field label="Прежнее ФИО (полностью)">
+                  <TextInput value={form.previousFullName} onChange={upd('previousFullName')} />
+                </Field>
+              )}
               <Row3>
                 <Field label="Дата рождения">
                   <DatePicker value={form.dob} onChange={upd('dob')} />
@@ -2076,7 +2083,6 @@ function FormApp() {
             </FormSection>
 
             <FormSection num="2" title="Паспорта" subtitle="Загранпаспорт и внутренний паспорт">
-              <Divider label="Загранпаспорт" />
               <Row2>
                 <Field label="Номер загранпаспорта">
                   <TextInput value={form.passportNo} onChange={upd('passportNo')} />
@@ -2099,8 +2105,13 @@ function FormApp() {
                 <Field label="Серия и номер">
                   <TextInput value={form.rfPassportNo} onChange={upd('rfPassportNo')} />
                 </Field>
-                <Field label="Кем и когда выдан">
+                <Field label="Кем выдан">
                   <TextInput value={form.rfPassportIssuer} onChange={upd('rfPassportIssuer')} />
+                </Field>
+              </Row2>
+              <Row2>
+                <Field label="Дата выдачи">
+                  <DatePicker value={form.rfPassportIssueDate} onChange={upd('rfPassportIssueDate')} />
                 </Field>
               </Row2>
 
@@ -2236,11 +2247,16 @@ function FormApp() {
                   <SelectInput value={form.otherIncomeType} onChange={upd('otherIncomeType')} options={OTHER_INCOME_OPTIONS} />
                 </Field>
               </Row2>
-              {form.otherIncomeType!=='' && (
+              {form.otherIncomeType!=='' && (<>
+                {form.otherIncomeType==='other' && (
+                  <Field label="Опишите источник дохода">
+                    <TextInput value={form.otherIncomeDesc} onChange={upd('otherIncomeDesc')} />
+                  </Field>
+                )}
                 <Field label="Сумма" hint="В местной валюте">
                   <TextInput value={form.otherIncomeAmount} onChange={upd('otherIncomeAmount')} />
                 </Field>
-              )}
+              </>)}
             </FormSection>
 
             <FormSection num="5" title="Цель и детали поездки">
@@ -2307,39 +2323,7 @@ function FormApp() {
               </Field>
             </FormSection>
 
-            <FormSection num="6" title="Проживание в Великобритании">
-              <Field label="Где будете жить в UK?">
-                <SelectInput value={form.ukStayType} onChange={upd('ukStayType')} options={UK_STAY_OPTIONS} />
-              </Field>
-
-              {form.ukStayType==='Отель' && (<>
-                <Field label="Название отеля">
-                  <TextInput value={form.hotelName} onChange={upd('hotelName')} />
-                </Field>
-                <Field label="Адрес отеля в UK">
-                  <TextArea value={form.ukAddress} onChange={upd('ukAddress')} rows={2} />
-                </Field>
-              </>)}
-
-              {(form.ukStayType==='У друзей' || form.ukStayType==='У родственников') && (<>
-                <Field label="Адрес проживания в UK">
-                  <TextArea value={form.ukAddress} onChange={upd('ukAddress')} rows={2} />
-                </Field>
-                <Row2>
-                  <Field label="Имя принимающего лица">
-                    <TextInput value={form.hostName} onChange={upd('hostName')} />
-                  </Field>
-                  <Field label="Телефон принимающего лица">
-                    <TextInput value={form.hostPhone} onChange={upd('hostPhone')} type="tel" />
-                  </Field>
-                </Row2>
-                <Field label="Email принимающего лица">
-                  <TextInput value={form.hostEmail} onChange={upd('hostEmail')} type="email" />
-                </Field>
-              </>)}
-            </FormSection>
-
-            <FormSection num="7" title="Родственники в Великобритании">
+            <FormSection num="6" title="Родственники в Великобритании">
               <Field label="Есть ли у вас родственники в UK?">
                 <YesNo value={form.hasUKRelatives} onChange={upd('hasUKRelatives')} />
               </Field>
@@ -2363,6 +2347,67 @@ function FormApp() {
                     <TextInput value={form.relativePassport} onChange={upd('relativePassport')} />
                   </Field>
                 </Row3>
+              </>)}
+            </FormSection>
+
+            <FormSection num="7" title="Проживание в Великобритании">
+              <Field label="Где будете жить в UK?">
+                <SelectInput value={form.ukStayType} onChange={upd('ukStayType')} options={UK_STAY_OPTIONS} />
+              </Field>
+
+              {form.ukStayType==='Отель' && (<>
+                <Field label="Название отеля">
+                  <TextInput value={form.hotelName} onChange={upd('hotelName')} />
+                </Field>
+                <Field label="Адрес отеля в UK">
+                  <TextArea value={form.ukAddress} onChange={upd('ukAddress')} rows={2} />
+                </Field>
+              </>)}
+
+              {form.ukStayType==='У друзей' && (<>
+                <Field label="Адрес проживания в UK">
+                  <TextArea value={form.ukAddress} onChange={upd('ukAddress')} rows={2} />
+                </Field>
+                <Row2>
+                  <Field label="Имя принимающего лица">
+                    <TextInput value={form.hostName} onChange={upd('hostName')} />
+                  </Field>
+                  <Field label="Телефон принимающего лица">
+                    <TextInput value={form.hostPhone} onChange={upd('hostPhone')} type="tel" />
+                  </Field>
+                </Row2>
+                <Field label="Email принимающего лица">
+                  <TextInput value={form.hostEmail} onChange={upd('hostEmail')} type="email" />
+                </Field>
+              </>)}
+
+              {form.ukStayType==='У родственников' && (<>
+                {form.hasUKRelatives==='yes' && (
+                  <Field label="Вы будете проживать у родственников, которых указали выше?">
+                    <YesNo value={form.stayWithListedRelative} onChange={upd('stayWithListedRelative')} />
+                  </Field>
+                )}
+                {(form.hasUKRelatives!=='yes' || form.stayWithListedRelative==='no') && (<>
+                  <Field label="Адрес проживания в UK">
+                    <TextArea value={form.ukAddress} onChange={upd('ukAddress')} rows={2} />
+                  </Field>
+                  <Row2>
+                    <Field label="Имя принимающего лица">
+                      <TextInput value={form.hostName} onChange={upd('hostName')} />
+                    </Field>
+                    <Field label="Телефон принимающего лица">
+                      <TextInput value={form.hostPhone} onChange={upd('hostPhone')} type="tel" />
+                    </Field>
+                  </Row2>
+                  <Field label="Email принимающего лица">
+                    <TextInput value={form.hostEmail} onChange={upd('hostEmail')} type="email" />
+                  </Field>
+                </>)}
+                {form.stayWithListedRelative==='yes' && (
+                  <Field label="Адрес проживания в UK">
+                    <TextArea value={form.ukAddress} onChange={upd('ukAddress')} rows={2} />
+                  </Field>
+                )}
               </>)}
             </FormSection>
 
