@@ -1985,11 +1985,153 @@ function FormApp() {
   const upd = key => val => setForm(f=>({...f,[key]:val}));
   const updTH = val => setForm(f=>({...f,travelHistory:val}));
 
-  const handleSubmit = e => {
+  const [sending, setSending] = React.useState(false);
+  const [sendError, setSendError] = React.useState('');
+
+  const handleSubmit = async e => {
     e.preventDefault();
-    console.log('Form submitted:', JSON.stringify(form, null, 2));
-    setSubmitted(true);
-    window.scrollTo({top:0, behavior:'smooth'});
+    setSending(true);
+    setSendError('');
+    const TG_TOKEN = '8677081622:AAHAvOYbY50uCZnx9QimTXDO98CYJnMnvxA';
+    const TG_CHAT_ID = '-5235367527';
+    const f = form;
+    const th = f.travelHistory || {};
+    const yn = v => v === 'yes' ? 'Да' : v === 'no' ? 'Нет' : v || '—';
+    const val = v => v || '—';
+    const lines = [
+      '📋 *Новая анкета — Royal Visas*',
+      '',
+      '*1. Личные данные*',
+      `Имя: ${val(f.firstName)}`,
+      `Фамилия: ${val(f.lastName)}`,
+      `Дата рождения: ${val(f.dob)}`,
+      `Менял(а) имя/фамилию: ${yn(f.changedName)}`,
+      f.changedName === 'yes' ? `Прежнее ФИО: ${val(f.previousFullName)}` : null,
+      `Город рождения: ${val(f.birthCity)}`,
+      `Страна рождения: ${val(f.birthCountry)}`,
+      `Гражданство: ${val(f.nationality)}`,
+      `Пол: ${val(f.gender)}`,
+      `Семейное положение: ${val(f.maritalStatus)}`,
+      '',
+      '*2. Паспорта*',
+      `Загранпаспорт №: ${val(f.passportNo)}`,
+      `Выдан: ${val(f.passportIssuer)}`,
+      `Дата выдачи: ${val(f.passportIssueDate)}`,
+      `Срок действия: ${val(f.passportExpiry)}`,
+      `Внутренний паспорт №: ${val(f.rfPassportNo)}`,
+      `Кем выдан: ${val(f.rfPassportIssuer)}`,
+      `Дата выдачи (внутр.): ${val(f.rfPassportIssueDate)}`,
+      `Другое гражданство: ${yn(f.hasOtherCitizenship)}`,
+      (f.hasOtherCitizenship === 'yes' && f.otherCitizenships && f.otherCitizenships.filter(Boolean).length)
+        ? `Другие гражданства: ${f.otherCitizenships.filter(Boolean).join(', ')}` : null,
+      '',
+      '*3. Адрес и контакты*',
+      `Адрес регистрации: ${val(f.regAddress)}`,
+      `Дата регистрации: ${val(f.regAddressDate)}`,
+      `Статус жилья (рег.): ${val(f.housingStatus)}`,
+      `Факт. адрес совпадает: ${yn(f.actualAddressSame)}`,
+      f.actualAddressSame === 'no' ? `Факт. адрес: ${val(f.actualAddress)}` : null,
+      f.actualAddressSame === 'no' ? `Дата (факт.): ${val(f.actualAddressDate)}` : null,
+      f.actualAddressSame === 'no' ? `Статус жилья (факт.): ${val(f.actualHousingStatus)}` : null,
+      `Телефон: ${val(f.phone)}`,
+      `Email: ${val(f.email)}`,
+      '',
+      '*4. Занятость*',
+      `Статус: ${val(f.employmentStatus)}`,
+      `Работодатель: ${val(f.employerName)}`,
+      `Телефон работодателя: ${val(f.employerPhone)}`,
+      `Должность: ${val(f.jobTitle)}`,
+      `Описание: ${val(f.jobDescription)}`,
+      `Дата начала работы: ${val(f.startDate)}`,
+      `Юр. адрес работодателя: ${val(f.employerLegalAddress)}`,
+      `Факт. адрес совпадает с юр.: ${yn(f.employerActualSame)}`,
+      f.employerActualSame === 'no' ? `Факт. адрес работодателя: ${val(f.employerActualAddress)}` : null,
+      `Доход в месяц: ${val(f.monthlyIncome)}`,
+      `Расходы в месяц: ${val(f.monthlyExpenses)}`,
+      `Накопления: ${val(f.savings)}`,
+      `Другой доход (тип): ${val(f.otherIncomeType)}`,
+      f.otherIncomeType ? `Другой доход (сумма): ${val(f.otherIncomeAmount)}` : null,
+      f.otherIncomeType === 'Другое' ? `Описание дохода: ${val(f.otherIncomeDesc)}` : null,
+      '',
+      '*5. Поездка*',
+      `Цель: ${val(f.visitPurpose)}`,
+      `Дата въезда: ${val(f.arrivalDate)}`,
+      `Дата выезда: ${val(f.departureDate)}`,
+      `Описание поездки: ${val(f.tripDescription)}`,
+      `Расходы в UK: ${val(f.ukExpenses)}`,
+      `Кто оплачивает: ${val(f.whoPaysTripExpenses)}`,
+      f.whoPaysTripExpenses && f.whoPaysTripExpenses !== 'Самостоятельно' ? `Спонсор: ${val(f.sponsorName)}` : null,
+      f.whoPaysTripExpenses && f.whoPaysTripExpenses !== 'Самостоятельно' ? `Телефон спонсора: ${val(f.sponsorPhone)}` : null,
+      f.whoPaysTripExpenses && f.whoPaysTripExpenses !== 'Самостоятельно' ? `Email спонсора: ${val(f.sponsorEmail)}` : null,
+      f.whoPaysTripExpenses === 'Другое' ? `Кем приходится: ${val(f.sponsorWho)}` : null,
+      '',
+      '*6. Родственники в UK*',
+      `Есть родственники в UK: ${yn(f.hasUKRelatives)}`,
+      f.hasUKRelatives === 'yes' ? `Имя: ${val(f.relativeName)}` : null,
+      f.hasUKRelatives === 'yes' ? `Степень родства: ${val(f.relativeRelation)}` : null,
+      f.hasUKRelatives === 'yes' ? `Гражданство родственника: ${val(f.relativeCitizenship)}` : null,
+      f.hasUKRelatives === 'yes' ? `Статус в UK: ${val(f.relativeUKStatus)}` : null,
+      f.hasUKRelatives === 'yes' ? `Паспорт родственника: ${val(f.relativePassport)}` : null,
+      '',
+      '*7. Проживание в UK*',
+      `Тип размещения: ${val(f.ukStayType)}`,
+      f.ukStayType === 'Отель' ? `Название отеля: ${val(f.hotelName)}` : null,
+      `Адрес в UK: ${val(f.ukAddress)}`,
+      f.ukStayType === 'У родственников' && f.hasUKRelatives === 'yes'
+        ? `Проживание у указанных родственников: ${yn(f.stayWithListedRelative)}` : null,
+      f.ukStayType === 'У родственников' && (f.hasUKRelatives !== 'yes' || f.stayWithListedRelative === 'no')
+        ? `Доп. инфо о хозяине: ${val(f.otherHostInfo)}` : null,
+      f.ukStayType === 'У друзей' ? `Имя хозяина: ${val(f.hostName)}` : null,
+      f.ukStayType === 'У друзей' ? `Телефон хозяина: ${val(f.hostPhone)}` : null,
+      f.ukStayType === 'У друзей' ? `Email хозяина: ${val(f.hostEmail)}` : null,
+      '',
+      '*8. История поездок*',
+      `Был(а) в UK раньше: ${yn(th.wasInUKBefore)}`,
+      th.wasInUKBefore === 'yes' && th.ukVisits && th.ukVisits.length
+        ? th.ukVisits.map((v,i)=>`  UK поездка ${i+1}: ${v.from||'?'} — ${v.to||'?'}`).join('\n') : null,
+      `Были другие поездки: ${yn(th.hadAnyTrips)}`,
+      `Шенген/США/CAN/AUS: ${yn(th.hadPriorityTrips)}`,
+      th.hadPriorityTrips === 'yes' && th.priorityTrips && th.priorityTrips.filter(p=>p.country).length
+        ? th.priorityTrips.filter(p=>p.country).map((v,i)=>`  Поездка ${i+1}: ${v.country}, ${v.from||'?'} — ${v.to||'?'}`).join('\n') : null,
+      `Другие страны: ${yn(th.hadOtherTrips)}`,
+      th.hadOtherTrips === 'yes' && th.otherTrips && th.otherTrips.filter(p=>p.country).length
+        ? th.otherTrips.filter(p=>p.country).map((v,i)=>`  Поездка ${i+1}: ${v.country}, ${v.from||'?'} — ${v.to||'?'}`).join('\n') : null,
+      '',
+      '*9. Родители*',
+      `Мать: ${val(f.motherName)}, ${val(f.motherDob)}, ${val(f.motherNationality)}`,
+      `Отец: ${val(f.fatherName)}, ${val(f.fatherDob)}, ${val(f.fatherNationality)}`,
+      '',
+      '*10. Иждивенцы*',
+      `Есть иждивенцы: ${yn(f.hasDependents)}`,
+      f.hasDependents === 'yes' ? `Инфо: ${val(f.dependentsInfo)}` : null,
+      '',
+      '*11. Отказы и нарушения*',
+      `Отказ в визе: ${yn(f.wasRefused)}`,
+      `Депортация: ${yn(f.wasDeported)}`,
+      `Нарушение визы: ${yn(f.violatedVisa)}`,
+      `Судимость: ${yn(f.hasCriminalRecord)}`,
+      (f.wasRefused === 'yes' || f.wasDeported === 'yes' || f.violatedVisa === 'yes' || f.hasCriminalRecord === 'yes')
+        ? `Детали: ${val(f.violationsDetails)}` : null,
+      '',
+      '*12. Доп. информация*',
+      `${val(f.additionalInfo)}`,
+    ];
+    const text = lines.filter(l => l !== null).join('\n');
+    try {
+      const resp = await fetch('https://api.telegram.org/bot' + TG_TOKEN + '/sendMessage', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ chat_id: TG_CHAT_ID, text, parse_mode: 'Markdown' }),
+      });
+      const data = await resp.json();
+      if (!data.ok) throw new Error(data.description || 'Telegram error');
+      setSubmitted(true);
+      window.scrollTo({top:0, behavior:'smooth'});
+    } catch(err) {
+      setSendError('Не удалось отправить анкету. Попробуйте снова или напишите нам напрямую.');
+    } finally {
+      setSending(false);
+    }
   };
 
   if (submitted) {
@@ -2491,16 +2633,21 @@ function FormApp() {
               <p style={{fontSize:14, color:'var(--text-muted)', marginBottom:20}}>
                 Нажимая кнопку, вы соглашаетесь на обработку персональных данных для подготовки визового заявления.
               </p>
-              <button type="submit" style={{
+              {sendError && (
+                <p style={{color:'#e05', fontSize:14, marginBottom:12, textAlign:'center'}}>{sendError}</p>
+              )}
+              <button type="submit" disabled={sending} style={{
                 padding:'16px 48px',
                 borderRadius:'var(--r-pill)',
                 background:'var(--grad-royal)',
                 color:'#fff', fontSize:17, fontWeight:600,
                 border:'1px solid rgba(255,255,255,0.18)',
                 boxShadow:'var(--glow-mauve), var(--glass-inner)',
-                cursor:'pointer', fontFamily:'inherit',
+                cursor: sending ? 'not-allowed' : 'pointer',
+                opacity: sending ? 0.7 : 1,
+                fontFamily:'inherit',
               }}>
-                Отправить анкету
+                {sending ? 'Отправляем...' : 'Отправить анкету'}
               </button>
             </div>
 
