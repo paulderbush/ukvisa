@@ -576,6 +576,7 @@ const OTHER_INCOME_OPTIONS = [
 const INITIAL_STATE = {
   firstName:'', lastName:'', otherNames:'', dob:'',
   birthCity:'', birthCountry:'', nationality:'', gender:'', maritalStatus:'',
+  spouseName:'', spouseDob:'',
   passportNo:'', passportIssuer:'', passportIssueDate:'', passportExpiry:'',
   rfPassportNo:'', rfPassportIssuer:'', rfPassportIssueDate:'',
   changedName:null, previousFullName:'',
@@ -651,6 +652,8 @@ function FormApp() {
       `Гражданство: ${val(f.nationality)}`,
       `Пол: ${val(f.gender)}`,
       `Семейное положение: ${val(f.maritalStatus)}`,
+      (f.maritalStatus === 'Состою в браке' || f.maritalStatus === 'Гражданский брак') ? `ФИО супруга/супруги: ${val(f.spouseName)}` : null,
+      (f.maritalStatus === 'Состою в браке' || f.maritalStatus === 'Гражданский брак') ? `Дата рождения супруга/супруги: ${val(f.spouseDob)}` : null,
       '',
       '*2. Паспорта*',
       `Загранпаспорт №: ${val(f.passportNo)}`,
@@ -861,6 +864,16 @@ function FormApp() {
                   <SelectInput value={form.maritalStatus} onChange={upd('maritalStatus')} options={MARITAL_OPTIONS} />
                 </Field>
               </Row3>
+              {(form.maritalStatus === 'Состою в браке' || form.maritalStatus === 'Гражданский брак') && (
+                <Row2>
+                  <Field label="ФИО супруга / супруги">
+                    <TextInput value={form.spouseName} onChange={upd('spouseName')} />
+                  </Field>
+                  <Field label="Дата рождения супруга / супруги">
+                    <DatePicker value={form.spouseDob} onChange={upd('spouseDob')} />
+                  </Field>
+                </Row2>
+              )}
             </FormSection>
 
             <FormSection num="2" title="Паспорта" subtitle="Загранпаспорт и внутренний паспорт">
@@ -1011,7 +1024,7 @@ function FormApp() {
               </Field>
               <Row3>
                 <Field label="Дата начала работы">
-                  <TextInput value={form.startDate} onChange={upd('startDate')} />
+                  <DatePicker value={form.startDate} onChange={upd('startDate')} />
                 </Field>
                 <Field label="Ежемесячный доход (после налогов)" hint="В местной валюте">
                   <TextInput value={form.monthlyIncome} onChange={upd('monthlyIncome')} />
